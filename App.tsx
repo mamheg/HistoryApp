@@ -16,7 +16,7 @@ import { MOCK_USER } from './services/mockData';
 
 const Navigation = () => {
   const location = useLocation();
-  
+
   const navItems = [
     { path: '/', icon: Home, label: 'Меню' },
     { path: '/profile', icon: UserIcon, label: 'Профиль' },
@@ -28,27 +28,25 @@ const Navigation = () => {
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           const Icon = item.icon;
-          
+
           return (
             <Link
               key={item.path}
               to={item.path}
               className="flex-1 flex flex-col items-center justify-center h-full relative group transition-all"
             >
-              <div 
-                className={`relative transition-all duration-300 ease-out transform ${
-                  isActive ? '-translate-y-2' : 'translate-y-0'
-                } ${isActive ? 'text-blue-600' : 'text-gray-400'}`}
+              <div
+                className={`relative transition-all duration-300 ease-out transform ${isActive ? '-translate-y-2' : 'translate-y-0'
+                  } ${isActive ? 'text-blue-600' : 'text-gray-400'}`}
               >
                 <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
               </div>
-              
-              <span 
-                className={`text-[11px] font-bold transition-all duration-300 ease-out absolute bottom-4 ${
-                  isActive 
-                    ? 'opacity-100 translate-y-0 text-blue-600 scale-100' 
+
+              <span
+                className={`text-[11px] font-bold transition-all duration-300 ease-out absolute bottom-4 ${isActive
+                    ? 'opacity-100 translate-y-0 text-blue-600 scale-100'
                     : 'opacity-0 translate-y-4 text-gray-400 scale-75 pointer-events-none'
-                }`}
+                  }`}
               >
                 {item.label}
               </span>
@@ -72,14 +70,14 @@ const AppContent: React.FC = () => {
         setIsKeyboardOpen(true);
       }
     };
-    
+
     const handleBlur = () => {
       setIsKeyboardOpen(false);
     };
 
     window.addEventListener('focusin', handleFocus);
     window.addEventListener('focusout', handleBlur);
-    
+
     return () => {
       window.removeEventListener('focusin', handleFocus);
       window.removeEventListener('focusout', handleBlur);
@@ -96,18 +94,30 @@ const AppContent: React.FC = () => {
       } catch (e) {
         console.error('Error initializing TG WebApp:', e);
       }
-      
+
       const tgUser = tg.initDataUnsafe?.user;
       if (tgUser) {
-        setAuth({
-          id: tgUser.id,
-          name: `${tgUser.first_name} ${tgUser.last_name || ''}`.trim(),
-          avatarUrl: tgUser.photo_url || `https://ui-avatars.com/api/?name=${tgUser.first_name}&background=736153&color=fff`,
-          points: 340,
-          lifetimePoints: 420,
-          level: "Бариста-Шеф",
-          nextLevelPoints: 500,
-          referralCode: `id${tgUser.id}`
+        // Phase 1: Try to sync with backend
+        import('./services/api').then(({ api }) => {
+          api.syncUser(tgUser)
+            .then(user => {
+              setAuth(user);
+            })
+            .catch(err => {
+              console.error("Backend auth failed, falling back to local/mock", err);
+              // Fallback logic could be here if needed, or we just rely on what was previously in store?
+              // But for now let's just create a basic user object so app works even if offline
+              setAuth({
+                id: tgUser.id,
+                name: `${tgUser.first_name} ${tgUser.last_name || ''}`.trim(),
+                avatarUrl: tgUser.photo_url || `https://ui-avatars.com/api/?name=${tgUser.first_name}&background=736153&color=fff`,
+                points: 340,
+                lifetimePoints: 420,
+                level: "Бариста-Шеф",
+                nextLevelPoints: 500,
+                referralCode: `id${tgUser.id}`
+              });
+            });
         });
       } else {
         if (!isAuth) {
