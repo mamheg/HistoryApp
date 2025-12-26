@@ -34,7 +34,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] flex flex-col items-center justify-center px-6 relative overflow-hidden font-sans">
+    <div className="min-h-screen bg-[#F3F4F6] flex flex-col items-center justify-center px-6 pt-[100px] relative overflow-hidden font-sans">
       <div className="absolute top-[-5%] right-[-10%] w-72 h-72 bg-blue-600 rounded-full blur-[100px] opacity-10"></div>
       <div className="absolute bottom-[5%] left-[-10%] w-72 h-72 bg-stone-500 rounded-full blur-[100px] opacity-10"></div>
 

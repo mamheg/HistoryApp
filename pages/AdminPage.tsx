@@ -115,7 +115,7 @@ export const AdminPage: React.FC = () => {
   const tabIndex = activeTab === 'orders' ? 0 : activeTab === 'menu' ? 1 : 2;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24 relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 font-sans pb-24 pt-[100px] relative overflow-x-hidden">
       {/* Header */}
       <div className="bg-slate-900 text-white p-6 rounded-b-[2.5rem] shadow-lg mb-6 animate-fade-in">
         <div className="flex justify-between items-center">

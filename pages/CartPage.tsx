@@ -101,7 +101,7 @@ export const CartPage: React.FC = () => {
   }
 
   return (
-    <div className="pb-28 pt-6 px-4 max-w-lg mx-auto relative min-h-screen flex flex-col font-sans">
+    <div className="pb-28 pt-[100px] px-4 max-w-lg mx-auto relative min-h-screen flex flex-col font-sans">
       <h1 className="text-2xl font-bold text-slate-900 mb-6 animate-slide-up">Ваш заказ</h1>
 
       <div className="space-y-4 mb-4 flex-1">
