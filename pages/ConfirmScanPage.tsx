@@ -55,7 +55,7 @@ export const ConfirmScanPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-sans pt-[100px]">
+    <div className="min-h-screen bg-slate-50 flex flex-col font-sans">
       <div className="p-4 flex items-center gap-4 bg-white border-b border-slate-100">
         <button onClick={() => navigate('/')} className="p-2 bg-slate-50 rounded-full active:scale-90 transition-transform">
           <ArrowLeft size={20} className="text-slate-700" />

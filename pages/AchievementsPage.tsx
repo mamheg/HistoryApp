@@ -20,7 +20,7 @@ export const AchievementsPage: React.FC = () => {
   const currentPoints = user.lifetimePoints || 0;
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] pb-32 pt-[100px]">
+    <div className="min-h-screen bg-[#F3F4F6] pb-32">
       <div className="bg-white/80 backdrop-blur-md p-4 border-b border-gray-100 sticky top-0 z-50 flex items-center gap-4 animate-fade-in">
         <button 
           onClick={() => navigate(-1)} 

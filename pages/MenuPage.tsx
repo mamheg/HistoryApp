@@ -196,7 +196,7 @@ export const MenuPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="pb-32 pt-[100px] bg-[#F3F4F6] min-h-screen relative">
+    <div className="pb-32 pt-4 bg-[#F3F4F6] min-h-screen relative">
       <div className="px-4 mb-4" ref={loyaltyRef}>
         {isAdmin && (
           <button 

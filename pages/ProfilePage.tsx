@@ -85,7 +85,7 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="pb-32 pt-[100px] px-4 max-w-lg mx-auto font-sans">
+    <div className="pb-32 pt-6 px-4 max-w-lg mx-auto font-sans">
       <div className="flex flex-col items-center mb-8 animate-slide-up relative">
         <button 
           onClick={() => setIsEditModalOpen(true)}
