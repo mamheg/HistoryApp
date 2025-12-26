@@ -39,15 +39,24 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 import os
+import uvicorn
+
+# Robust path handling
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DIST_DIR = os.path.join(BASE_DIR, "../dist")
+STATIC_DIR = os.path.join(BASE_DIR, "static")
 
 # Create static directory if not exists
-if not os.path.exists("static"):
-    os.makedirs("static")
+if not os.path.exists(STATIC_DIR):
+    os.makedirs(STATIC_DIR)
 
 # Mount static files first
 # Check if dist exists (frontend build)
-if os.path.exists("../dist"):
-    app.mount("/assets", StaticFiles(directory="../dist/assets"), name="assets")
+if os.path.exists(DIST_DIR):
+    # Mount assets folder
+    assets_path = os.path.join(DIST_DIR, "assets")
+    if os.path.exists(assets_path):
+        app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
     
     # Serve index.html for root and any other path (SPA support)
     @app.get("/{full_path:path}")
@@ -57,11 +66,14 @@ if os.path.exists("../dist"):
             raise HTTPException(status_code=404, detail="Not found")
         
         # Determine if it's a file request or a route request
-        if "." in full_path and os.path.exists(f"../dist/{full_path}"):
-             return FileResponse(f"../dist/{full_path}")
+        target_file = os.path.join(DIST_DIR, full_path)
+        if "." in full_path and os.path.exists(target_file):
+             return FileResponse(target_file)
              
         # Otherwise serve index.html
-        with open("../dist/index.html", "r", encoding="utf-8") as f:
-            return HTMLResponse(content=f.read())
+        return FileResponse(os.path.join(DIST_DIR, "index.html"))
 else:
-    print("WARNING: '../dist' folder not found. Run 'npm run build' in frontend folder.")
+    print(f"WARNING: '{DIST_DIR}' folder not found. Run 'npm run build' in frontend folder.")
+
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=4000, reload=True)
