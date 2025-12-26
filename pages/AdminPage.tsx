@@ -1,5 +1,5 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { 
   Plus, 
   Trash2, 
@@ -23,42 +23,15 @@ import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
 
-interface Order {
-  id: string;
-  user: string;
-  items: string;
-  total: number;
-  status: 'pending' | 'preparing' | 'ready';
-  time: string;
-}
-
 export const AdminPage: React.FC = () => {
   const { products, categories, addProduct, updateProduct, deleteProduct, undoLastOperation, lastOperation } = useAppStore();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   
-  const [activeTab, setActiveTab] = useState<'orders' | 'menu' | 'stats'>('orders');
+  const [activeTab, setActiveTab] = useState<'menu' | 'stats'>('menu');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
-
-  const [orders, setOrders] = useState<Order[]>([
-    { id: '#4501', user: 'Марина И.', items: 'Капучино M, Синнабон', total: 460, status: 'preparing', time: '12:45' },
-    { id: '#4502', user: 'Игорь С.', items: 'Флэт Уайт, Чизкейк', total: 520, status: 'pending', time: '12:50' },
-    { id: '#4498', user: 'Дарья К.', items: 'Матча Латте', total: 290, status: 'ready', time: '12:30' },
-  ]);
-
-  const updateOrderStatus = (id: string, newStatus: Order['status']) => {
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
-  };
-
-  const getStatusColor = (status: Order['status']) => {
-    switch (status) {
-      case 'pending': return 'bg-amber-100 text-amber-600';
-      case 'preparing': return 'bg-blue-100 text-blue-600';
-      case 'ready': return 'bg-green-100 text-green-600';
-    }
-  };
 
   const handleEditProduct = (p: Product) => {
     setEditingProduct({...p});
@@ -112,20 +85,20 @@ export const AdminPage: React.FC = () => {
     }
   };
 
-  const tabIndex = activeTab === 'orders' ? 0 : activeTab === 'menu' ? 1 : 2;
+  const tabIndex = activeTab === 'menu' ? 0 : 1;
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans pb-24 relative overflow-x-hidden">
       {/* Header */}
-      <div className="bg-slate-900 text-white p-6 rounded-b-[2.5rem] shadow-lg mb-6 animate-fade-in">
+      <div className="bg-[#736153] text-white p-6 rounded-b-[2.5rem] shadow-lg mb-6 animate-fade-in">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-white/10 backdrop-blur-md rounded-xl flex items-center justify-center border border-white/20">
               <Coffee size={24} />
             </div>
             <div>
               <h1 className="text-xl font-bold">Панель Управления</h1>
-              <p className="text-slate-400 text-xs">Администрирование H🪶STORY</p>
+              <p className="text-[#ece9e2]/80 text-xs">Администрирование H🪶STORY</p>
             </div>
           </div>
         </div>
@@ -138,7 +111,7 @@ export const AdminPage: React.FC = () => {
           className="w-full mb-6 bg-white border border-slate-200 p-4 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all"
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center">
+            <div className="w-10 h-10 bg-[#736153]/10 text-[#736153] rounded-full flex items-center justify-center">
               <ExternalLink size={20} />
             </div>
             <div className="text-left">
@@ -152,65 +125,33 @@ export const AdminPage: React.FC = () => {
         {/* Tabs with Slider */}
         <div className="relative flex gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6">
           <div 
-            className="absolute top-1 bottom-1 bg-slate-900 rounded-xl transition-all duration-300 ease-out shadow-lg"
+            className="absolute top-1 bottom-1 bg-[#736153] rounded-xl transition-all duration-300 ease-out shadow-lg"
             style={{ 
-              width: 'calc(33.33% - 2.6px)', 
-              left: `calc(${tabIndex * 33.33}% + ${tabIndex === 0 ? '4px' : tabIndex === 1 ? '1px' : '-2px'})` 
+              width: 'calc(50% - 4px)', 
+              left: tabIndex === 0 ? '4px' : '50%'
             }}
           />
-          {(['orders', 'menu', 'stats'] as const).map(tab => (
+          {(['menu', 'stats'] as const).map(tab => (
             <button 
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-3 rounded-xl font-bold text-xs transition-all uppercase tracking-wider relative z-10 ${activeTab === tab ? 'text-white' : 'text-slate-400'}`}
             >
-              {tab === 'orders' ? 'Заказы' : tab === 'menu' ? 'Меню' : 'Статистика'}
+              {tab === 'menu' ? 'Меню' : 'Статистика'}
             </button>
           ))}
         </div>
-
-        {/* Content: Orders */}
-        {activeTab === 'orders' && (
-          <div className="space-y-4 animate-slide-up">
-            <div className="flex justify-between items-center mb-2 px-1">
-              <h2 className="text-lg font-bold text-slate-900">Текущие заказы</h2>
-              <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-lg font-bold">{orders.length}</span>
-            </div>
-            {orders.map((order) => (
-              <div key={order.id} className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
-                <div className="flex justify-between items-start mb-3">
-                  <div>
-                    <span className="text-xs font-mono text-slate-400 font-bold uppercase">{order.id} • {order.time}</span>
-                    <h3 className="text-lg font-black text-slate-900">{order.user}</h3>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getStatusColor(order.status)}`}>
-                    {order.status === 'pending' ? 'В ожидании' : order.status === 'preparing' ? 'Готовится' : 'Готов'}
-                  </span>
-                </div>
-                <p className="text-sm text-slate-500 mb-4">{order.items}</p>
-                <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                  <span className="text-lg font-bold">{order.total} ₽</span>
-                  <div className="flex gap-2">
-                    {order.status === 'pending' && <button onClick={() => updateOrderStatus(order.id, 'preparing')} className="bg-blue-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Принять</button>}
-                    {order.status === 'preparing' && <button onClick={() => updateOrderStatus(order.id, 'ready')} className="bg-green-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Готов</button>}
-                    {order.status === 'ready' && <button onClick={() => updateOrderStatus(order.id, 'pending')} className="bg-slate-100 text-slate-400 px-4 py-2 rounded-xl text-xs font-bold">Завершен</button>}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
 
         {/* Content: Menu Management */}
         {activeTab === 'menu' && (
           <div className="space-y-4 animate-slide-up">
             {/* Last Operation Section */}
             {lastOperation && (
-              <div className="bg-white border border-blue-100 p-5 rounded-[2rem] shadow-sm mb-6 animate-pop-in overflow-hidden relative group">
+              <div className="bg-white border border-[#736153]/20 p-5 rounded-[2rem] shadow-sm mb-6 animate-pop-in overflow-hidden relative group">
                 {/* Decorative background accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110 duration-500" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#736153]/10 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110 duration-500" />
                 
-                <div className="flex items-center gap-2 text-blue-600 mb-4 relative z-10">
+                <div className="flex items-center gap-2 text-[#736153] mb-4 relative z-10">
                   <History size={16} />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em]">Последняя операция</span>
                 </div>
@@ -235,7 +176,7 @@ export const AdminPage: React.FC = () => {
                               <span className="text-slate-400">{ch.field}:</span>
                               <span className="text-slate-600">{ch.from}</span>
                               <ArrowRight size={10} className="text-slate-300" />
-                              <span className="text-blue-600">{ch.to}</span>
+                              <span className="text-[#736153]">{ch.to}</span>
                             </div>
                           ))}
                         </div>
@@ -246,7 +187,7 @@ export const AdminPage: React.FC = () => {
                 <div className="pt-4 border-t border-slate-50 relative z-10">
                   <button 
                     onClick={undoLastOperation}
-                    className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-xl text-xs font-black uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-blue-100"
+                    className="w-full flex items-center justify-center gap-2 bg-[#736153] text-white py-3 rounded-xl text-xs font-black uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-[#736153]/20"
                   >
                     <Undo2 size={14} />
                     Отменить последнее действие
@@ -259,7 +200,7 @@ export const AdminPage: React.FC = () => {
               <h2 className="text-lg font-bold text-slate-900">Каталог товаров</h2>
               <button 
                 onClick={handleAddNewProduct}
-                className="bg-blue-600 text-white p-2 rounded-xl shadow-lg active:scale-90 transition-all"
+                className="bg-[#736153] text-white p-2 rounded-xl shadow-lg active:scale-90 transition-all"
               >
                 <Plus size={20} />
               </button>
@@ -274,7 +215,7 @@ export const AdminPage: React.FC = () => {
                   <p className="text-xs text-slate-400">{p.price} ₽</p>
                 </div>
                 <div className="flex gap-2">
-                  <button onClick={() => handleEditProduct(p)} className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                  <button onClick={() => handleEditProduct(p)} className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-[#736153] hover:text-white transition-colors">
                     <Edit3 size={18} />
                   </button>
                   <button onClick={() => setProductToDelete(p)} className="p-2 bg-slate-50 text-slate-500 rounded-lg hover:bg-red-50 hover:text-red-600 transition-colors">
@@ -291,7 +232,7 @@ export const AdminPage: React.FC = () => {
           <div className="space-y-6 animate-slide-up">
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-white p-5 rounded-3xl shadow-sm border border-slate-100">
-                <div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-3">
+                <div className="w-10 h-10 bg-[#736153]/10 text-[#736153] rounded-xl flex items-center justify-center mb-3">
                   <ShoppingBag size={20} />
                 </div>
                 <p className="text-2xl font-black text-slate-900">128</p>
@@ -315,9 +256,9 @@ export const AdminPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-lg">
+            <div className="bg-[#736153] text-white p-6 rounded-3xl shadow-lg">
               <h3 className="font-bold mb-2">Аналитика недели</h3>
-              <p className="text-slate-400 text-xs mb-4">Статистика продаж по категориям</p>
+              <p className="text-[#ece9e2]/60 text-xs mb-4">Статистика продаж по категориям</p>
               <div className="space-y-3">
                 {categories.map(cat => (
                   <div key={cat.id}>
@@ -325,8 +266,8 @@ export const AdminPage: React.FC = () => {
                       <span>{cat.name}</span>
                       <span>{Math.floor(Math.random() * 100)}%</span>
                     </div>
-                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-blue-500 rounded-full" style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }} />
+                    <div className="h-1.5 bg-black/20 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#ece9e2] rounded-full" style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }} />
                     </div>
                   </div>
                 ))}
@@ -398,14 +339,14 @@ export const AdminPage: React.FC = () => {
                   <input 
                     type="text" 
                     placeholder="Название товара"
-                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
                     value={editingProduct.name}
                     onChange={e => setEditingProduct({...editingProduct, name: e.target.value})}
                   />
                   <input 
                     type="number" 
                     placeholder="Цена (₽)"
-                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-blue-500"
+                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
                     value={editingProduct.price || ''}
                     onChange={e => setEditingProduct({...editingProduct, price: Number(e.target.value)})}
                   />
@@ -435,7 +376,7 @@ export const AdminPage: React.FC = () => {
 
               <button 
                 onClick={saveProduct}
-                className="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                className="w-full bg-[#736153] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#736153]/20 flex items-center justify-center gap-2 active:scale-95 transition-all"
               >
                 <Save size={20} />
                 Сохранить изменения
