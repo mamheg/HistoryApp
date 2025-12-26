@@ -379,7 +379,7 @@ export const MenuPage: React.FC = () => {
               </svg>
             </a>
           </div>
-          <p className="mt-8 text-[9px] text-slate-500 font-bold uppercase tracking-wider">H<span className="grayscale opacity-50">🪶</span>STORY © 2026 • Сделано с любовью</p>
+          <p className="mt-8 text-[9px] text-slate-500 font-bold uppercase tracking-wider">Created by &lt;еще не придумали&gt;</p>
         </div>
       </div>
 
