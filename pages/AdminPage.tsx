@@ -88,17 +88,17 @@ export const AdminPage: React.FC = () => {
   const tabIndex = activeTab === 'menu' ? 0 : 1;
 
   return (
-    <div className="min-h-screen bg-slate-50 font-sans pb-24 pt-[100px] relative overflow-x-hidden">
+    <div className="min-h-screen bg-slate-50 font-sans pb-24 pt-6 relative overflow-x-hidden">
       {/* Header */}
-      <div className="bg-slate-900 text-white p-6 rounded-b-[2.5rem] shadow-lg mb-6 animate-fade-in">
+      <div className="bg-[#736153] text-white p-6 rounded-b-[2.5rem] shadow-lg mb-6 animate-fade-in">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#736153] rounded-xl flex items-center justify-center">
-              <Coffee size={24} />
+            <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+              <Coffee size={24} className="text-white" />
             </div>
             <div>
               <h1 className="text-xl font-bold">Панель Управления</h1>
-              <p className="text-slate-400 text-xs">Администрирование H🪶STORY</p>
+              <p className="text-[#ece9e2]/80 text-xs">Администрирование H🪶STORY</p>
             </div>
           </div>
         </div>
@@ -125,7 +125,7 @@ export const AdminPage: React.FC = () => {
         {/* Tabs with Slider */}
         <div className="relative flex gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6">
           <div 
-            className="absolute top-1 bottom-1 bg-slate-900 rounded-xl transition-all duration-300 ease-out shadow-lg"
+            className="absolute top-1 bottom-1 bg-[#736153] rounded-xl transition-all duration-300 ease-out shadow-lg"
             style={{ 
               width: 'calc(50% - 2px)', 
               left: `calc(${tabIndex * 50}% + ${tabIndex === 0 ? '2px' : '0px'})` 
@@ -256,9 +256,9 @@ export const AdminPage: React.FC = () => {
               </div>
             </div>
             
-            <div className="bg-slate-900 text-white p-6 rounded-3xl shadow-lg">
+            <div className="bg-[#736153] text-white p-6 rounded-3xl shadow-lg">
               <h3 className="font-bold mb-2">Аналитика недели</h3>
-              <p className="text-slate-400 text-xs mb-4">Статистика продаж по категориям</p>
+              <p className="text-[#ece9e2]/70 text-xs mb-4">Статистика продаж по категориям</p>
               <div className="space-y-3">
                 {categories.map(cat => (
                   <div key={cat.id}>
@@ -267,7 +267,7 @@ export const AdminPage: React.FC = () => {
                       <span>{Math.floor(Math.random() * 100)}%</span>
                     </div>
                     <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-[#736153] rounded-full" style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }} />
+                      <div className="h-full bg-[#ece9e2] rounded-full" style={{ width: `${Math.floor(Math.random() * 80) + 20}%` }} />
                     </div>
                   </div>
                 ))}
