@@ -1,6 +1,6 @@
 import { User } from '../types';
 
-const API_URL = 'http://localhost:8000/api';
+const API_URL = '/api';
 
 export const api = {
     async syncUser(tgUser: { id: number; first_name: string; last_name?: string; photo_url?: string }): Promise<User> {
