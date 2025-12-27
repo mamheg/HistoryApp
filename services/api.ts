@@ -63,5 +63,24 @@ export const api = {
             console.error('[API] Error updating points:', err);
             throw err;
         }
+    },
+
+    async createOrder(orderData: {
+        user_id: number;
+        items_summary: string;
+        total_price: number;
+        points_used: number;
+        pickup_time?: string;
+        comment?: string;
+    }): Promise<any> {
+        const response = await fetch(`${API_URL}/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData),
+        });
+        if (!response.ok) {
+            throw new Error(`Order failed: ${response.status}`);
+        }
+        return response.json();
     }
 };

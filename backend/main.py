@@ -47,6 +47,13 @@ def update_points(user_id: int, data: UpdatePointsRequest, db: Session = Depends
     
     return crud.update_user_points(db, user_id, data.points, data.lifetime_points)
 
+@app.post("/api/orders", response_model=schemas.Order)
+def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
+    db_order = crud.create_order(db, order)
+    if db_order is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return db_order
+
 # Serve Static Files (CSS, JS, Images)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse

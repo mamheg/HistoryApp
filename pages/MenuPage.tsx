@@ -1,13 +1,13 @@
 
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { 
-  Search, 
-  ArrowUp, 
-  X, 
-  ShieldAlert, 
-  ChevronRight, 
-  ShoppingBag, 
-  Heart, 
+import {
+  Search,
+  ArrowUp,
+  X,
+  ShieldAlert,
+  ChevronRight,
+  ShoppingBag,
+  Heart,
   Sparkles,
   Plus,
   Instagram
@@ -20,7 +20,7 @@ import { Product, CartItem } from '../types';
 
 export const MenuPage: React.FC = () => {
   const navigate = useNavigate();
-  
+
   const user = useAppStore(state => state.user);
   const isAdmin = useAppStore(state => state.isAdmin);
   const products = useAppStore(state => state.products);
@@ -42,16 +42,16 @@ export const MenuPage: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [isCartAnimating, setIsCartAnimating] = useState(false);
-  
+
   const categoryRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
   const tabsContainerRef = useRef<HTMLDivElement>(null);
   const loyaltyRef = useRef<HTMLDivElement>(null);
   const prevItemsCount = useRef(cartItemsCount);
-  
+
   const isManualScroll = useRef(false);
   const scrollTimeout = useRef<any>(null);
 
-  const HEADER_OFFSET = 140; 
+  const HEADER_OFFSET = 140;
 
   useEffect(() => {
     if (cartItemsCount > prevItemsCount.current) {
@@ -78,7 +78,7 @@ export const MenuPage: React.FC = () => {
   }, [searchTerm, showFavoritesOnly, favorites, products]);
 
   const visibleCategories = useMemo(() => {
-    return categories.filter(cat => 
+    return categories.filter(cat =>
       filteredProducts.some(p => p.categoryId === cat.id)
     );
   }, [filteredProducts, categories]);
@@ -93,7 +93,7 @@ export const MenuPage: React.FC = () => {
       if (!visibleCategories.length) return;
 
       if (loyaltyRef.current) {
-        const threshold = loyaltyRef.current.offsetHeight + loyaltyRef.current.offsetTop + 120; 
+        const threshold = loyaltyRef.current.offsetHeight + loyaltyRef.current.offsetTop + 120;
         setShowScrollTop(window.scrollY > threshold);
       } else {
         setShowScrollTop(window.scrollY > 400);
@@ -101,16 +101,16 @@ export const MenuPage: React.FC = () => {
 
       if (isManualScroll.current) return;
       const scrollPosition = window.scrollY + HEADER_OFFSET;
-      
+
       let currentActiveId = visibleCategories[0]?.id || (categories.length > 0 ? categories[0].id : '');
-      
+
       for (const cat of visibleCategories) {
         const element = categoryRefs.current[cat.id];
         if (element && element.offsetTop <= scrollPosition) {
           currentActiveId = cat.id;
         }
       }
-      
+
       const currentStoredCategory = useAppStore.getState().activeCategory;
       if (currentActiveId && currentActiveId !== currentStoredCategory) {
         useAppStore.getState().setActiveCategory(currentActiveId);
@@ -174,11 +174,10 @@ export const MenuPage: React.FC = () => {
     >
       <div className="aspect-square rounded-xl overflow-hidden mb-3 bg-gray-50 relative p-2">
         <img src={product.imageUrl} alt={product.name} className="w-full h-full object-contain" />
-        <button 
+        <button
           onClick={(e) => handleToggleFavorite(e, product.id)}
-          className={`absolute top-1.5 right-1.5 p-1.5 rounded-full shadow-sm z-10 transition-all ${
-            favorites.includes(product.id) ? 'bg-white text-red-500' : 'bg-white/80 backdrop-blur-md text-gray-500'
-          }`}
+          className={`absolute top-1.5 right-1.5 p-1.5 rounded-full shadow-sm z-10 transition-all ${favorites.includes(product.id) ? 'bg-white text-red-500' : 'bg-white/80 backdrop-blur-md text-gray-500'
+            }`}
         >
           <Heart size={14} fill={favorites.includes(product.id) ? "currentColor" : "none"} />
         </button>
@@ -199,7 +198,7 @@ export const MenuPage: React.FC = () => {
     <div className="pb-32 pt-6 bg-[#F3F4F6] min-h-screen relative">
       <div className="px-4 mb-4" ref={loyaltyRef}>
         {isAdmin && (
-          <button 
+          <button
             onClick={() => navigate('/admin')}
             className="w-full mb-4 bg-slate-900 text-white p-4 rounded-2xl flex items-center justify-between shadow-lg active:scale-[0.98] transition-all animate-pop-in"
           >
@@ -218,9 +217,11 @@ export const MenuPage: React.FC = () => {
       </div>
 
       <div className="flex items-center justify-center py-4 mb-2 animate-fade-in">
-         <h1 className="font-serif text-3xl font-bold tracking-[0.2em] text-[#736153] flex items-center gap-1 select-none">
-           H<span className="text-2xl transform -rotate-12 filter sepia-[.5] opacity-80">🪶</span>STORY
-         </h1>
+        <img
+          src="items/logo.png"
+          alt="Logo"
+          className="h-16 w-auto object-contain"
+        />
       </div>
 
       <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300">
@@ -242,18 +243,17 @@ export const MenuPage: React.FC = () => {
               </button>
             )}
           </div>
-          <button 
+          <button
             onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-            className={`p-3 rounded-xl transition-all shadow-sm flex items-center justify-center ${
-              showFavoritesOnly ? 'bg-red-50 text-red-500 ring-2 ring-red-100 scale-105' : 'bg-white text-gray-500 hover:text-gray-700'
-            }`}
+            className={`p-3 rounded-xl transition-all shadow-sm flex items-center justify-center ${showFavoritesOnly ? 'bg-red-50 text-red-500 ring-2 ring-red-100 scale-105' : 'bg-white text-gray-500 hover:text-gray-700'
+              }`}
           >
             <Heart size={20} fill={showFavoritesOnly ? "currentColor" : "none"} />
           </button>
         </div>
-        
+
         {/* Скрываем категории, если включен фильтр избранного */}
-        <div 
+        <div
           className={`transition-all duration-300 ease-in-out overflow-hidden ${showFavoritesOnly ? 'max-h-0 opacity-0' : 'max-h-14 opacity-100'}`}
         >
           <div ref={tabsContainerRef} className="flex overflow-x-auto space-x-2 px-4 pb-4 no-scrollbar scroll-smooth">
@@ -262,9 +262,8 @@ export const MenuPage: React.FC = () => {
                 key={cat.id}
                 id={`tab-${cat.id}`}
                 onClick={() => handleCategoryClick(cat.id)}
-                className={`whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-medium transition-all ${
-                  activeCategory === cat.id ? 'bg-[#b7ad98] text-white shadow-md' : 'bg-white text-gray-600 border border-gray-100'
-                }`}
+                className={`whitespace-nowrap px-5 py-2.5 rounded-full text-sm font-medium transition-all ${activeCategory === cat.id ? 'bg-[#b7ad98] text-white shadow-md' : 'bg-white text-gray-600 border border-gray-100'
+                  }`}
               >
                 {cat.name}
               </button>
@@ -280,7 +279,7 @@ export const MenuPage: React.FC = () => {
               <span>Ваш фаворит</span>
               <Sparkles size={18} className="text-blue-500 animate-pulse" />
             </h2>
-            <div 
+            <div
               onClick={() => handleProductClick(topProduct)}
               className="bg-white p-5 rounded-[2.5rem] shadow-xl border border-blue-50 flex items-center gap-6 active:scale-[0.98] transition-all cursor-pointer relative overflow-hidden group"
             >
@@ -290,17 +289,16 @@ export const MenuPage: React.FC = () => {
               </div>
               <div className="flex-1 relative z-10">
                 <div className="flex items-center gap-2 mb-1">
-                   <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest">Часто заказываете</span>
+                  <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest">Часто заказываете</span>
                 </div>
                 <h3 className="text-lg font-black text-gray-900 leading-tight mb-2">{topProduct.name}</h3>
                 <div className="flex items-center justify-between">
                   <span className="text-xl font-black text-slate-900">{topProduct.price} ₽</span>
                   <div className="flex items-center gap-2">
-                    <button 
+                    <button
                       onClick={(e) => handleToggleFavorite(e, topProduct.id)}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
-                        favorites.includes(topProduct.id) ? 'bg-red-50 text-red-500 shadow-sm' : 'bg-gray-50 text-gray-500'
-                      }`}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${favorites.includes(topProduct.id) ? 'bg-red-50 text-red-500 shadow-sm' : 'bg-gray-50 text-gray-500'
+                        }`}
                     >
                       <Heart size={20} fill={favorites.includes(topProduct.id) ? "currentColor" : "none"} />
                     </button>
@@ -315,51 +313,51 @@ export const MenuPage: React.FC = () => {
         )}
 
         {showFavoritesOnly ? (
-            <div className="animate-fade-in min-h-[300px]">
-                <div className="flex items-center justify-between mb-6 px-1">
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-bold text-gray-900">Избранные товары</h2>
-                    {filteredProducts.length > 0 && (
-                      <span className="text-xs font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full animate-pop-in">
-                        {filteredProducts.length}
-                      </span>
-                    )}
-                  </div>
-                </div>
-                
-                {filteredProducts.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-4">
-                        {filteredProducts.map((product, index) => renderProductCard(product, index, true))}
-                    </div>
-                ) : (
-                    <div className="flex flex-col items-center justify-center py-16 text-center animate-slide-up">
-                         <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-5 relative">
-                            <Heart size={36} className="text-slate-300" />
-                            <div className="absolute top-0 right-0 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
-                              <Plus size={12} className="text-slate-400" />
-                            </div>
-                         </div>
-                         <p className="text-slate-600 font-bold mb-1 text-lg">Список избранного пуст</p>
-                         <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed">
-                           Отмечайте любимые товары сердечком, чтобы они появились здесь
-                         </p>
-                    </div>
+          <div className="animate-fade-in min-h-[300px]">
+            <div className="flex items-center justify-between mb-6 px-1">
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold text-gray-900">Избранные товары</h2>
+                {filteredProducts.length > 0 && (
+                  <span className="text-xs font-bold bg-red-100 text-red-500 px-2 py-0.5 rounded-full animate-pop-in">
+                    {filteredProducts.length}
+                  </span>
                 )}
+              </div>
             </div>
-        ) : (
-            visibleCategories.map((cat) => {
-              const categoryProducts = filteredProducts.filter(p => p.categoryId === cat.id);
-              if (categoryProducts.length === 0) return null;
-              
-              return (
-                <div key={cat.id} ref={(el) => { categoryRefs.current[cat.id] = el; }} className="scroll-mt-40">
-                  <h2 className="text-xl font-bold text-gray-900 mb-4 px-1">{cat.name}</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    {categoryProducts.map((product, index) => renderProductCard(product, index))}
+
+            {filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-2 gap-4">
+                {filteredProducts.map((product, index) => renderProductCard(product, index, true))}
+              </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 text-center animate-slide-up">
+                <div className="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-5 relative">
+                  <Heart size={36} className="text-slate-300" />
+                  <div className="absolute top-0 right-0 w-6 h-6 bg-white rounded-full flex items-center justify-center shadow-sm">
+                    <Plus size={12} className="text-slate-400" />
                   </div>
                 </div>
-              );
-            })
+                <p className="text-slate-600 font-bold mb-1 text-lg">Список избранного пуст</p>
+                <p className="text-xs text-slate-400 max-w-[200px] leading-relaxed">
+                  Отмечайте любимые товары сердечком, чтобы они появились здесь
+                </p>
+              </div>
+            )}
+          </div>
+        ) : (
+          visibleCategories.map((cat) => {
+            const categoryProducts = filteredProducts.filter(p => p.categoryId === cat.id);
+            if (categoryProducts.length === 0) return null;
+
+            return (
+              <div key={cat.id} ref={(el) => { categoryRefs.current[cat.id] = el; }} className="scroll-mt-40">
+                <h2 className="text-xl font-bold text-gray-900 mb-4 px-1">{cat.name}</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {categoryProducts.map((product, index) => renderProductCard(product, index))}
+                </div>
+              </div>
+            );
+          })
         )}
 
         <div className="pt-8 pb-12 text-center animate-fade-in stagger-6 opacity-0 fill-mode-forwards">
@@ -367,7 +365,7 @@ export const MenuPage: React.FC = () => {
           <div className="flex justify-center gap-4">
             <a href="https://t.me/hoffee" target="_blank" rel="noreferrer" className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-500 hover:text-blue-500 transition-all active:scale-90 border border-gray-50 overflow-hidden">
               <svg viewBox="0 0 100 100" className="w-9 h-9">
-                <path d="M72.5,28.5L25.5,46.5c-3.2,1.3-3.2,3.1-0.6,3.9l12,3.7l27.8-17.5c1.3-0.8,2.5-0.4,1.5,0.5L43.7,56.3l-0.8,12.5 c1.2,0,1.7-0.6,2.4-1.2l5.8-5.6l12,8.8c2.2,1.2,3.8,0.6,4.4-2.1l7.8-37.1C76.2,28.2,74.9,27.5,72.5,28.5z" fill="currentColor"/>
+                <path d="M72.5,28.5L25.5,46.5c-3.2,1.3-3.2,3.1-0.6,3.9l12,3.7l27.8-17.5c1.3-0.8,2.5-0.4,1.5,0.5L43.7,56.3l-0.8,12.5 c1.2,0,1.7-0.6,2.4-1.2l5.8-5.6l12,8.8c2.2,1.2,3.8,0.6,4.4-2.1l7.8-37.1C76.2,28.2,74.9,27.5,72.5,28.5z" fill="currentColor" />
               </svg>
             </a>
             <a href="https://instagram.com/hoffee" target="_blank" rel="noreferrer" className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-500 hover:text-pink-500 transition-all active:scale-90 border border-gray-50">
@@ -375,7 +373,7 @@ export const MenuPage: React.FC = () => {
             </a>
             <a href="https://vk.com/hoffee" target="_blank" rel="noreferrer" className="w-14 h-14 bg-white rounded-2xl shadow-sm flex items-center justify-center text-slate-500 hover:text-blue-600 transition-all active:scale-90 border border-gray-50 overflow-hidden">
               <svg viewBox="0 0 100 100" className="w-10 h-10">
-                <path d="M54.5,70c-18.1,0-28.4-12.4-28.9-33h9.1c0.4,15.1,7,21.5,12.3,22.9v-22.9h8.6v13.1c5.3-0.5,10.7-6.5,12.5-13.1h8.6 c-1.5,8.1-7.5,14.1-11.8,16.6c4.3,2.1,11.2,7.3,13.8,16.4h-9.5c-2-6.3-7-11.2-13.6-11.8v11.8H54.5z" fill="currentColor"/>
+                <path d="M54.5,70c-18.1,0-28.4-12.4-28.9-33h9.1c0.4,15.1,7,21.5,12.3,22.9v-22.9h8.6v13.1c5.3-0.5,10.7-6.5,12.5-13.1h8.6 c-1.5,8.1-7.5,14.1-11.8,16.6c4.3,2.1,11.2,7.3,13.8,16.4h-9.5c-2-6.3-7-11.2-13.6-11.8v11.8H54.5z" fill="currentColor" />
               </svg>
             </a>
           </div>
@@ -385,7 +383,7 @@ export const MenuPage: React.FC = () => {
 
       {cartItemsCount > 0 && (
         <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${isCartAnimating ? 'scale-105' : 'scale-100'}`}>
-          <div 
+          <div
             onClick={() => navigate('/cart')}
             className={`bg-white/70 backdrop-blur-xl border border-white/40 p-1.5 pl-6 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] flex items-center gap-4 cursor-pointer active:scale-95 transition-all hover:bg-white/80 ${isCartAnimating ? 'ring-2 ring-blue-500/20' : ''}`}
           >
@@ -403,8 +401,8 @@ export const MenuPage: React.FC = () => {
       )}
 
       {showScrollTop && (
-        <button 
-          onClick={scrollToTop} 
+        <button
+          onClick={scrollToTop}
           className={`fixed ${cartItemsCount > 0 ? 'bottom-44' : 'bottom-28'} right-6 z-50 p-3 bg-white/80 backdrop-blur-md text-blue-600 rounded-full shadow-lg transition-all active:scale-90`}
         >
           <ArrowUp size={24} strokeWidth={2.5} />
