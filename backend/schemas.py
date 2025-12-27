@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from datetime import datetime
 
 class UserBase(BaseModel):
     id: int
@@ -27,12 +28,10 @@ class OrderCreate(BaseModel):
     pickup_time: Optional[str] = None
     comment: Optional[str] = None
 
-from datetime import datetime
-
 class Order(OrderCreate):
     id: str
     points_earned: int
-    created_at: datetime # Pydantic will serialize to ISO string
+    created_at: datetime # Serialized to ISO string
 
     class Config:
         from_attributes = True
