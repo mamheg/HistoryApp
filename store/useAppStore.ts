@@ -41,7 +41,7 @@ interface AppState {
   orderStats: Record<number, number>;
   lastOperation: OperationLog | null;
   selectedAddress: string;
-  
+
   setAuth: (user: User) => void;
   updateProfile: (name: string, avatarUrl: string) => void;
   addPoints: (amount: number) => void;
@@ -54,7 +54,7 @@ interface AppState {
   setActiveCategory: (id: string) => void;
   toggleFavorite: (productId: number) => void;
   setSelectedAddress: (address: string) => void;
-  
+
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
   deleteProduct: (id: number) => void;
@@ -87,17 +87,30 @@ export const useAppStore = create<AppState>((set, get) => ({
   selectedAddress: savedAddress || 'Нальчик, ул. Толстого, 43',
 
   setAuth: (user) => {
-    const levelInfo = getLevelByPoints(user.lifetimePoints || 0);
-    const nextLevel = getNextLevel(user.lifetimePoints || 0);
+    // If user comes from API, it might already have level logic. 
+    // If not (or if it's mock), we calculate it.
+    let level = user.level;
+    let nextLevelPoints = user.nextLevelPoints;
+
+    if (!level || nextLevelPoints === undefined) {
+      const levelInfo = getLevelByPoints(user.lifetimePoints || 0);
+      const nextLevel = getNextLevel(user.lifetimePoints || 0);
+      level = levelInfo.name;
+      nextLevelPoints = nextLevel ? nextLevel.pointsRequired : levelInfo.pointsRequired;
+    }
+
     const finalUser = {
       ...user,
-      level: levelInfo.name,
-      nextLevelPoints: nextLevel ? nextLevel.pointsRequired : levelInfo.pointsRequired
+      level,
+      nextLevelPoints
     };
+
+    // Persist to local storage for offline capability
     localStorage.setItem('hoffee_user', JSON.stringify(finalUser));
-    set({ 
-      user: finalUser, 
-      isAuth: true, 
+
+    set({
+      user: finalUser,
+      isAuth: true,
       isAdmin: ADMIN_TELEGRAM_IDS.includes(user.id)
     });
   },
@@ -111,7 +124,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   addPoints: (amount) => set((state) => {
     if (!state.user) return state;
-    
+
     const newPoints = state.user.points + amount;
     const newLifetime = (state.user.lifetimePoints || 0) + amount;
     const levelInfo = getLevelByPoints(newLifetime);
@@ -124,7 +137,7 @@ export const useAppStore = create<AppState>((set, get) => ({
       level: levelInfo.name,
       nextLevelPoints: nextLevel ? nextLevel.pointsRequired : levelInfo.pointsRequired
     };
-    
+
     localStorage.setItem('hoffee_user', JSON.stringify(updatedUser));
     return { user: updatedUser };
   }),
@@ -164,7 +177,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   completeOrder: (total, pointsUsed, pickupTime, comment) => set((state) => {
     if (!state.user) return state;
-    
+
     const newStats = { ...state.orderStats };
     state.cart.forEach(item => {
       newStats[item.productId] = (newStats[item.productId] || 0) + item.quantity;
@@ -178,14 +191,14 @@ export const useAppStore = create<AppState>((set, get) => ({
     const levelInfo = getLevelByPoints(updatedLifetime);
     const nextLevel = getNextLevel(updatedLifetime);
 
-    const updatedUser = { 
-      ...state.user, 
+    const updatedUser = {
+      ...state.user,
       points: updatedBalance,
       lifetimePoints: updatedLifetime,
       level: levelInfo.name,
       nextLevelPoints: nextLevel ? nextLevel.pointsRequired : levelInfo.pointsRequired
     };
-    
+
     localStorage.setItem('hoffee_user', JSON.stringify(updatedUser));
 
     const itemsSummary = state.cart.map(i => `${i.productName} x${i.quantity}`).join(', ');

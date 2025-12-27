@@ -23,12 +23,7 @@ export const api = {
 
             const backendUser = await response.json();
 
-            // Transform backend response to frontend User type if needed
-            // Backend: id, name, avatar_url, points, lifetime_points, level_name, is_admin
-            // Frontend User: id, name, avatarUrl, points, lifetimePoints, level, nextLevelPoints...
-
-            // Calculate next level points based on frontend logic for now (until Phase 2)
-            // Or just map what we have.
+            // Transform backend response to frontend User type
             return {
                 id: backendUser.id,
                 name: backendUser.name,
@@ -36,10 +31,7 @@ export const api = {
                 points: backendUser.points,
                 lifetimePoints: backendUser.lifetime_points,
                 level: backendUser.level_name,
-                // We still need these for UI, maybe calculate locally for now or add to backend response?
-                // Backend doesn't send nextLevelPoints yet.
-                // Let's use the helper from store? Or just 0 for safe fallback.
-                nextLevelPoints: 0,
+                nextLevelPoints: backendUser.next_level_points,
                 referralCode: `id${backendUser.id}`
             };
         } catch (error) {
