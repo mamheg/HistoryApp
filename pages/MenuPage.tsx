@@ -222,6 +222,7 @@ export const MenuPage: React.FC = () => {
           alt="Logo"
           className="h-16 w-auto object-contain"
         />
+        <h1>History</h1>
       </div>
 
       <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300">
