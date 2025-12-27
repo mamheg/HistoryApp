@@ -41,15 +41,27 @@ export const api = {
     },
 
     async updatePoints(userId: number, points: number, lifetimePoints: number): Promise<void> {
-        await fetch(`${API_URL}/users/${userId}/points`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                points,
-                lifetime_points: lifetimePoints
-            }),
-        });
+        console.log(`[API] Updating points for user ${userId}: ${points} (lifetime: ${lifetimePoints})`);
+        try {
+            const response = await fetch(`${API_URL}/users/${userId}/points`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    points,
+                    lifetime_points: lifetimePoints
+                }),
+            });
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`[API] Failed to update points: ${response.status} ${errorText}`);
+                throw new Error(`Failed to update points: ${response.status}`);
+            }
+            console.log('[API] Points updated successfully');
+        } catch (err) {
+            console.error('[API] Error updating points:', err);
+            throw err;
+        }
     }
 };
