@@ -42,3 +42,17 @@ def update_user_profile(db: Session, user_id: int, name: str, avatar_url: str):
         db.commit()
         db.refresh(db_user)
     return db_user
+
+def update_user_points(db: Session, user_id: int, points: int, lifetime_points: int):
+    db_user = get_user(db, user_id)
+    if db_user:
+        db_user.points = points
+        db_user.lifetime_points = lifetime_points
+        
+        # Recalculate level
+        level_name, _ = utils.calculate_user_level(lifetime_points)
+        db_user.level_name = level_name
+        
+        db.commit()
+        db.refresh(db_user)
+    return db_user

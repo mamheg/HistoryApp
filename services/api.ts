@@ -38,5 +38,18 @@ export const api = {
             console.error('API Error:', error);
             throw error;
         }
+    },
+
+    async updatePoints(userId: number, points: number, lifetimePoints: number): Promise<void> {
+        await fetch(`${API_URL}/users/${userId}/points`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                points,
+                lifetime_points: lifetimePoints
+            }),
+        });
     }
 };

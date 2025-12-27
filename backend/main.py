@@ -35,6 +35,18 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
+class UpdatePointsRequest(schemas.BaseModel):
+    points: int
+    lifetime_points: int
+
+@app.post("/api/users/{user_id}/points", response_model=schemas.User)
+def update_points(user_id: int, data: UpdatePointsRequest, db: Session = Depends(get_db)):
+    db_user = crud.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return crud.update_user_points(db, user_id, data.points, data.lifetime_points)
+
 # Serve Static Files (CSS, JS, Images)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
