@@ -79,7 +79,7 @@ class OrderMonitor:
 
 async def main():
     """Main function to start the bot."""
-    if BOT_TOKEN == "YOUR_BOT_TOKEN_HERE":
+    if BOT_TOKEN == "8175857082:AAHQXaY_8O71lG3IhNxqfRnRK_AfIK1eeIo":
         logger.error("BOT_TOKEN not set! Please set it in config.py or .env file")
         return
 
