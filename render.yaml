@@ -1,10 +1,38 @@
 services:
+  # Backend API Service (FastAPI)
   - type: web
-    name: hoffee-shop-app
+    name: history-coffee-api
     env: python
-    buildCommand: "./render_build.sh"
-    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0
+      - key: DATABASE_URL
+        fromDatabase:
+          name: history-coffee-db
+          property: connectionString
     autoDeploy: false
+
+  # Telegram Bot Service (aiogram - Worker, not Web!)
+  - type: worker
+    name: history-coffee-bot
+    env: python
+    buildCommand: pip install -r bot/requirements.txt
+    startCommand: cd bot && python main.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.0
+      - key: BOT_TOKEN
+        sync: false  # Set manually in Render dashboard
+      - key: DATABASE_URL
+        fromDatabase:
+          name: history-coffee-db
+          property: connectionString
+    autoDeploy: false
+
+# PostgreSQL Database
+databases:
+  - name: history-coffee-db
+    databaseName: history_coffee
+    user: history_coffee_user
