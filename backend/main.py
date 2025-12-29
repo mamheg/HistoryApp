@@ -190,14 +190,25 @@ if os.path.exists(DIST_DIR):
     if os.path.exists(assets_path):
         app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
     
-    # Mount public folders for videos and images
+    # Mount public folders for videos and images with caching
     PUBLIC_DIR = os.path.join(BASE_DIR, "../public")
     videos_path = os.path.join(PUBLIC_DIR, "videos")
     images_path = os.path.join(PUBLIC_DIR, "images")
     
-    if os.path.exists(videos_path):
-        app.mount("/videos", StaticFiles(directory=videos_path), name="videos")
-        print(f"Serving videos from: {videos_path}")
+    # Custom video endpoint with strong cache headers for mobile
+    @app.get("/videos/{filename}")
+    async def serve_video(filename: str):
+        video_file = os.path.join(videos_path, filename)
+        if os.path.exists(video_file):
+            return FileResponse(
+                video_file,
+                media_type="video/mp4",
+                headers={
+                    "Cache-Control": "public, max-age=31536000, immutable",
+                    "Accept-Ranges": "bytes"
+                }
+            )
+        raise HTTPException(status_code=404, detail="Video not found")
     
     if os.path.exists(images_path):
         app.mount("/images", StaticFiles(directory=images_path), name="images")
