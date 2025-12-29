@@ -18,7 +18,8 @@ import {
   Undo2,
   History,
   ArrowRight,
-  Loader2
+  Loader2,
+  RefreshCw
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
@@ -143,6 +144,13 @@ export const AdminPage: React.FC = () => {
               <p className="text-[#ece9e2]/80 text-xs">Администрирование H🪶STORY</p>
             </div>
           </div>
+          <button
+            onClick={() => loadMenu()}
+            className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center active:scale-90 transition-all"
+            title="Обновить меню"
+          >
+            <RefreshCw size={20} className="text-white" />
+          </button>
         </div>
       </div>
 
@@ -319,129 +327,133 @@ export const AdminPage: React.FC = () => {
       </div>
 
       {/* Delete Confirmation Modal */}
-      {productToDelete && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center px-6 animate-fade-in">
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setProductToDelete(null)} />
-          <div className="bg-white w-full max-sm rounded-[2.5rem] p-8 relative z-[111] shadow-2xl animate-pop-in text-center">
-            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
-              <AlertTriangle size={32} />
-            </div>
-            <h2 className="text-xl font-black text-slate-900 mb-2">Удалить позицию?</h2>
-            <p className="text-slate-500 text-sm mb-8">
-              Вы уверены, что хотите удалить <span className="font-bold text-slate-900">«{productToDelete.name}»</span>? Это действие можно будет отменить.
-            </p>
-            <div className="flex flex-col gap-3">
-              <button
-                onClick={confirmDelete}
-                className="w-full bg-red-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-200 active:scale-95 transition-all"
-              >
-                Да, удалить
-              </button>
-              <button
-                onClick={() => setProductToDelete(null)}
-                className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold active:scale-95 transition-all"
-              >
-                Отмена
-              </button>
+      {
+        productToDelete && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center px-6 animate-fade-in">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setProductToDelete(null)} />
+            <div className="bg-white w-full max-sm rounded-[2.5rem] p-8 relative z-[111] shadow-2xl animate-pop-in text-center">
+              <div className="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <AlertTriangle size={32} />
+              </div>
+              <h2 className="text-xl font-black text-slate-900 mb-2">Удалить позицию?</h2>
+              <p className="text-slate-500 text-sm mb-8">
+                Вы уверены, что хотите удалить <span className="font-bold text-slate-900">«{productToDelete.name}»</span>? Это действие можно будет отменить.
+              </p>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={confirmDelete}
+                  className="w-full bg-red-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-200 active:scale-95 transition-all"
+                >
+                  Да, удалить
+                </button>
+                <button
+                  onClick={() => setProductToDelete(null)}
+                  className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold active:scale-95 transition-all"
+                >
+                  Отмена
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Edit Product Modal */}
-      {isEditModalOpen && editingProduct && (
-        <div className="fixed inset-0 z-[100] flex items-end justify-center animate-fade-in">
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)} />
-          <div className="bg-white w-full max-w-lg rounded-t-[2.5rem] p-6 pb-12 relative z-[101] shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-black text-slate-900">
-                {products.find(p => p.id === editingProduct.id) ? 'Редактировать' : 'Новый товар'}
-              </h2>
-              <button onClick={() => setIsEditModalOpen(false)} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
-            </div>
+      {
+        isEditModalOpen && editingProduct && (
+          <div className="fixed inset-0 z-[100] flex items-end justify-center animate-fade-in">
+            <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={() => setIsEditModalOpen(false)} />
+            <div className="bg-white w-full max-w-lg rounded-t-[2.5rem] p-6 pb-12 relative z-[101] shadow-2xl animate-slide-up max-h-[90vh] overflow-y-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-black text-slate-900">
+                  {products.find(p => p.id === editingProduct.id) ? 'Редактировать' : 'Новый товар'}
+                </h2>
+                <button onClick={() => setIsEditModalOpen(false)} className="p-2 bg-slate-100 rounded-full"><X size={20} /></button>
+              </div>
 
-            <div className="space-y-6">
-              <div className="flex gap-4">
-                <div className="w-24 h-24 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
-                  {editingProduct.imageUrl ? (
-                    <img src={editingProduct.imageUrl} className="w-full h-full object-contain" />
-                  ) : (
-                    <ImageIcon size={24} />
-                  )}
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="w-24 h-24 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 overflow-hidden relative group">
+                    {editingProduct.imageUrl ? (
+                      <img src={editingProduct.imageUrl} className="w-full h-full object-contain" />
+                    ) : (
+                      <ImageIcon size={24} />
+                    )}
+                    <button
+                      onClick={() => fileInputRef.current?.click()}
+                      className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
+                    >
+                      <Upload size={20} />
+                    </button>
+                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+                  </div>
+                  <div className="flex-1 space-y-3">
+                    <input
+                      type="text"
+                      placeholder="Название товара"
+                      className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
+                      value={editingProduct.name}
+                      onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })}
+                    />
+                    <input
+                      type="number"
+                      placeholder="Цена (₽)"
+                      className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
+                      value={editingProduct.price || ''}
+                      onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Категория</label>
+                  <select
+                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm"
+                    value={editingProduct.categoryId}
+                    onChange={e => setEditingProduct({ ...editingProduct, categoryId: e.target.value })}
                   >
-                    <Upload size={20} />
-                  </button>
-                  <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
+                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
                 </div>
-                <div className="flex-1 space-y-3">
-                  <input
-                    type="text"
-                    placeholder="Название товара"
-                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
-                    value={editingProduct.name}
-                    onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })}
-                  />
-                  <input
-                    type="number"
-                    placeholder="Цена (₽)"
-                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
-                    value={editingProduct.price || ''}
-                    onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
+
+                <div>
+                  <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Описание</label>
+                  <textarea
+                    placeholder="Опишите продукт..."
+                    className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm h-24 resize-none"
+                    value={editingProduct.description}
+                    onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })}
                   />
                 </div>
-              </div>
 
-              <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Категория</label>
-                <select
-                  className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm"
-                  value={editingProduct.categoryId}
-                  onChange={e => setEditingProduct({ ...editingProduct, categoryId: e.target.value })}
-                >
-                  {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                </select>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Описание</label>
-                <textarea
-                  placeholder="Опишите продукт..."
-                  className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm h-24 resize-none"
-                  value={editingProduct.description}
-                  onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })}
-                />
-              </div>
-
-              {error && (
-                <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4">
-                  {error}
-                </div>
-              )}
-
-              <button
-                onClick={saveProduct}
-                disabled={isSaving}
-                className="w-full bg-[#736153] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#736153]/30 flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSaving ? (
-                  <>
-                    <Loader2 size={20} className="animate-spin" />
-                    Сохранение...
-                  </>
-                ) : (
-                  <>
-                    <Save size={20} />
-                    Сохранить изменения
-                  </>
+                {error && (
+                  <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4">
+                    {error}
+                  </div>
                 )}
-              </button>
+
+                <button
+                  onClick={saveProduct}
+                  disabled={isSaving}
+                  className="w-full bg-[#736153] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#736153]/30 flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? (
+                    <>
+                      <Loader2 size={20} className="animate-spin" />
+                      Сохранение...
+                    </>
+                  ) : (
+                    <>
+                      <Save size={20} />
+                      Сохранить изменения
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 };

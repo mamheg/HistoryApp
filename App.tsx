@@ -129,9 +129,15 @@ const AppContent: React.FC = () => {
     }
   }, [isAuth, setAuth]);
 
-  // Phase 3: Load menu from API
+  // Phase 3: Load menu from API with auto-refresh every 30 seconds
   React.useEffect(() => {
     loadMenu();
+
+    const interval = setInterval(() => {
+      loadMenu();
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
   }, [loadMenu]);
 
   if (!isAuth) {
