@@ -13,132 +13,209 @@ export const MOCK_USER: User = {
 };
 
 export const CATEGORIES: Category[] = [
-  { id: 'coffee', name: 'Кофе' },
-  { id: 'seasonal', name: 'Сезонное' },
-  { id: 'tea', name: 'Чай и Матча' },
-  { id: 'food', name: 'Десерты' },
-  { id: 'beans', name: 'Зерно' },
+  { id: 'coffee', name: 'Кофе и напитки' },
+  // { id: 'tea', name: 'Чай и Матча' },
+  { id: 'breakfast', name: 'Завтраки' },
+  { id: 'main', name: 'Основные блюда' },
+  { id: 'dessert', name: 'Десерты' },
 ];
 
 export const PRODUCTS: Product[] = [
+  // --- COFFEE & DRINKS ---
   {
-    id: 1,
-    name: "Капучино",
-    description: "Идеальный баланс: много пышной молочной пенки и мягкий кофейный вкус. Самый популярный выбор для тех, кто любит классику с молоком.",
-    price: 250,
+    id: 20,
+    name: "Латте с соленой карамелью",
+    description: "Бежевый латте с миндальными хлопьями и завитком карамели. Идеальный баланс сладкого и соленого.",
+    price: 300,
     categoryId: "coffee",
-    imageUrl: "https://png.pngtree.com/png-clipart/20230927/original/pngtree-cup-of-cappuccino-coffee-png-image_13144396.png",
+    imageUrl: "https://i.postimg.cc/gnTkgZdD/image.jpg",
     modifiers: {
-      sizes: [
-        { id: 's', name: 'S (200мл)', price: 0 },
-        { id: 'm', name: 'M (300мл)', price: 50 },
-        { id: 'l', name: 'L (400мл)', price: 90 },
-      ],
-      milks: [
-        { id: 'reg', name: 'Обычное', price: 0 },
-        { id: 'oat', name: 'Овсяное', price: 40 },
-        { id: 'almond', name: 'Миндальное', price: 40 },
-      ],
-      syrups: [
-        { id: 'vanilla', name: 'Ваниль', price: 30 },
-        { id: 'caramel', name: 'Карамель', price: 30 },
-      ]
-    }
-  },
-  {
-    id: 7,
-    name: "Флэт Уайт",
-    description: "Для тех, кто хочет чувствовать кофе: здесь меньше молока, чем в капучино, поэтому вкус более бодрящий, терпкий и насыщенный.",
-    price: 280,
-    categoryId: "coffee",
-    imageUrl: "https://www.coca-cola.com/content/dam/onexp/in/en/home-page-test-img/brands/costa/costa-resized/cortado.png",
-    modifiers: {
-      sizes: [{ id: 'm', name: '250мл', price: 0 }],
-      milks: [
-        { id: 'reg', name: 'Обычное', price: 0 },
-        { id: 'coconut', name: 'Кокосовое', price: 50 },
-      ],
+      sizes: [{ id: 'm', name: 'M (300мл)', price: 0 }, { id: 'l', name: 'L (400мл)', price: 60 }],
+      milks: [{ id: 'reg', name: 'Обычное', price: 0 }, { id: 'alt', name: 'Альтернативное', price: 50 }],
       syrups: []
     }
   },
   {
-    id: 8,
-    name: "Раф Классический",
-    description: "Настоящий кофейный десерт: готовится не на молоке, а на густых сливках. Очень нежный, сладковатый и сытный, как тающее мороженое.",
-    price: 310,
+    id: 18,
+    name: "Малиновый латте",
+    description: "Нежный розовый латте с посыпкой из сублимированной малины. Ягодная нежность в каждом глотке.",
+    price: 300,
     categoryId: "coffee",
-    imageUrl: "https://i.pinimg.com/736x/6e/df/1f/6edf1fad94b93988d705f6cf24179ee3.jpg",
+    imageUrl: "https://i.postimg.cc/pm3rLn10/image.jpg",
     modifiers: {
-      sizes: [
-        { id: 'm', name: '300мл', price: 0 },
-        { id: 'l', name: '400мл', price: 60 },
-      ],
-      milks: [{ id: 'cream', name: 'Сливки 10%', price: 0 }],
-      syrups: [{ id: 'lavender', name: 'Лаванда', price: 40 }]
+      sizes: [{ id: 'm', name: '300мл', price: 0 }],
+      milks: [{ id: 'reg', name: 'Обычное', price: 0 }, { id: 'coconut', name: 'Кокосовое', price: 50 }],
+      syrups: []
     }
   },
   {
-    id: 9,
-    name: "Бамбл",
-    description: "Необычный микс: холодный напиток из апельсинового сока, карамели и эспрессо. Освежающий, кисло-сладкий и очень бодрящий.",
-    price: 340,
-    categoryId: "seasonal",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=78b9a555dda691ed2a7b2b435ad41abd92cacff6-4079583-images-thumbs&n=13",
+    id: 19,
+    name: "Горячий шоколад",
+    description: "Чашка густого горячего шоколада с бархатистой пенкой. Согревает и поднимает настроение.",
+    price: 250,
+    categoryId: "coffee",
+    imageUrl: "https://i.postimg.cc/F1hRzvDv/image.jpg",
+    modifiers: {
+      sizes: [{ id: 's', name: '200мл', price: 0 }],
+      milks: [],
+      syrups: [{ id: 'marshmallow', name: 'Маршмеллоу', price: 30 }]
+    }
   },
+
+  // --- TEA & MATCHA ---
   {
-    id: 2,
-    name: "Тыквенный Латте",
-    description: "Осеннее настроение в кружке: сладкий, пряный и согревающий напиток с ароматом запеченной тыквы, корицы и нежной пенкой.",
-    price: 320,
-    categoryId: "seasonal",
-    imageUrl: "https://png.pngtree.com/png-vector/20241204/ourmid/pngtree-creamy-pumpkin-spice-latte-with-whipped-cream-png-image_14433818.png",
+    id: 17,
+    name: "Матча латте",
+    description: "Зеленый матча латте с красивым латте-артом на пенке. Подается в широкой чашке на блюдце.",
+    price: 300,
+    categoryId: "coffee",
+    imageUrl: "https://i.postimg.cc/TpRWzmzf/image.jpg",
+    modifiers: {
+      sizes: [{ id: 'm', name: '300мл', price: 0 }],
+      milks: [{ id: 'reg', name: 'Обычное', price: 0 }, { id: 'oat', name: 'Овсяное', price: 50 }],
+      syrups: []
+    }
   },
+
+  // --- BREAKFAST ---
   {
-    id: 3,
-    name: "Матча Латте",
-    description: "Это не кофе! Взбитый в пену японский зеленый чай с молоком. Дарит спокойную энергию без кофеиновых скачков и очень полезен.",
-    price: 290,
-    categoryId: "tea",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=bcd6d8090826702e2ae9883fae5cbdbc1537c7c2-10805353-images-thumbs&n=13",
-  },
-  {
-    id: 10,
-    name: "Чизкейк Нью-Йорк",
-    description: "Тот самый классический десерт: плотный, сливочный, на тонком коржике из песочного печенья. Совсем не приторный и очень нежный.",
-    price: 240,
-    categoryId: "food",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=f8db665b9c74b69fb4936b7b4d9b9e41_l-7085252-images-thumbs&n=13",
-  },
-  {
-    id: 11,
-    name: "Шоколадный Брауни",
-    description: "Мечта шоколадоголика: насыщенный шоколадный вкус, влажная текстура внутри и хрустящие кусочки грецкого ореха.",
-    price: 190,
-    categoryId: "food",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=dc67497213b3d401a9580eb06897c1233a90b2bd-4078231-images-thumbs&n=13",
-  },
-  {
-    id: 12,
-    name: "Синнабон",
-    description: "Ароматная горячая булочка с корицей, щедро политая тающим кремом из сливочного сыра. Идеальный антистресс.",
-    price: 210,
-    categoryId: "food",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=8b7026ea64ea5e31cf1808a02e6f667473fe8367-5869402-images-thumbs&n=13",
-  },
-  {
-    id: 4,
-    name: "Миндальный круассан",
-    description: "Хрустящая французская выпечка, внутри которой много сладкого миндального крема. Идеальная пара к чашке кофе.",
-    price: 180,
-    categoryId: "food",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=a5100439e3713bad1e8635e32d2bce9faca88da9-5235063-images-thumbs&n=13",
+    id: 14,
+    name: "Авокадо-тост с лососем",
+    description: "Хрустящий тост с кремом из авокадо, ломтиками лосося, яйцом пашот и микрозеленью.",
+    price: 450,
+    categoryId: "breakfast",
+    imageUrl: "https://i.postimg.cc/wttN5fYF/image.jpg",
   },
   {
     id: 6,
-    name: "Фильтр-кофе",
-    description: "Чистый черный кофе без молока и сахара. Легкий, ароматный, как хороший чай, но с сильным бодрящим эффектом. Сорт дня: Эфиопия.",
-    price: 190,
-    categoryId: "coffee",
-    imageUrl: "https://avatars.mds.yandex.net/i?id=c413caddbd05069649d901104f1f2924e23fe7c2-5092559-images-thumbs&n=13",
+    name: "Круассан с овощами",
+    description: "Свежий круассан, щедро наполненный огурцом, помидором, листьями салата и нежным сыром.",
+    price: 250,
+    categoryId: "breakfast",
+    imageUrl: "https://i.postimg.cc/nsZ8B5mb/image.jpg",
+  },
+  {
+    id: 13,
+    name: "Фруктовая каша",
+    description: "Питательная овсянка с клубникой, черникой, бананом, йогуртом, орехами и ломтиками сливы.",
+    price: 250,
+    categoryId: "breakfast",
+    imageUrl: "https://i.postimg.cc/4HRpxzM4/image.jpg",
+  },
+
+  // --- MAIN DISHES ---
+  {
+    id: 3,
+    name: "Говядина с овощами",
+    description: "Сочные кусочки жареной говядины с картофелем, помидорами черри, болгарским перцем и спаржей в фирменном соусе.",
+    price: 500,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/KRRm8dPt/image.jpg",
+  },
+  {
+    id: 5,
+    name: "Креветки в карри с рисом",
+    description: "Рассыпчатый рис с ароматным соусом карри и кусочками креветок, украшенный свежей зеленью.",
+    price: 450,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/qgZdSjPd/image.jpg",
+  },
+  {
+    id: 16,
+    name: "Креветки в остром соусе",
+    description: "Тигровые креветки в пикантном оранжевом соусе с зеленым луком и лавровым листом.",
+    price: 500,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/Q9GFQjbM/image.jpg",
+  },
+  {
+    id: 7,
+    name: "Курица гриль с соусом",
+    description: "Аппетитная нарезанная курица на гриле, подается с насыщенным красным соусом и легким салатом.",
+    price: 400,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/vx4CGwJb/image.jpg",
+  },
+  {
+    id: 8,
+    name: "Салат Цезарь",
+    description: "Хрустящие листья романо с куриным филе, домашними сухариками, пармезаном и помидорами черри.",
+    price: 400,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/jDHmxXFQ/image.jpg",
+  },
+  {
+    id: 4,
+    name: "Салат с курицей",
+    description: "Легкий салат с кусочками курицы в кунжуте, свежими помидорами, зеленью, огурцом и белым сыром.",
+    price: 400,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/JycLFm8R/image.jpg",
+  },
+  {
+    id: 21,
+    name: "Салат с киноа и курицей",
+    description: "Куриное филе в сливочном соусе с киноа, огурцом, помидором и миксом салатных листьев.",
+    price: 450,
+    categoryId: "main",
+    imageUrl: "https://i.postimg.cc/mzBbP33S/image.jpg",
+  },
+
+  // --- DESSERTS ---
+  {
+    id: 2,
+    name: "Шоколадный чизкейк",
+    description: "Роскошный кусок чизкейка с карамельным слоем, нежной кремовой серединой и шоколадным верхом.",
+    price: 350,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/vgbQ8ThF/image.jpg",
+  },
+  {
+    id: 1,
+    name: "Фруктовый тарт",
+    description: "Прямоугольный тарт с заварным кремом и шапкой из свежих ягод: клубники, малины и черники.",
+    price: 300,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/KKcLKGJd/image.jpg",
+  },
+  {
+    id: 9,
+    name: "Малиновый медовик",
+    description: "Авторский слоеный торт с тонкими медовыми коржами, сливочным кремом и ярким верхом из малины.",
+    price: 350,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/c6vzgZzy/image.jpg",
+  },
+  {
+    id: 11,
+    name: "Торт с арахисовым маслом",
+    description: "Торт в глянцевой шоколадной глазури с насыщенным кремом из арахисового масла, украшен золотом.",
+    price: 350,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/JsxxYdFp/image.jpg",
+  },
+  {
+    id: 10,
+    name: "Карамельный эклер",
+    description: "Воздушный эклер, покрытый карамельной глазурью, с дроблеными орехами и декоративными хлопьями.",
+    price: 250,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/SXZZRt7N/image.jpg",
+  },
+  {
+    id: 12,
+    name: "Лимонный пирог с меренгой",
+    description: "Маленький тарт с яркой лимонной начинкой и поджаренными пиками воздушной меренги.",
+    price: 300,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/QHrq83GR/image.jpg",
+  },
+  {
+    id: 15,
+    name: "Шоколадно-арахисовое печенье",
+    description: "Большое домашнее печенье с шоколадными чипсами, арахисовой посыпкой и шоколадной глазурью.",
+    price: 200,
+    categoryId: "dessert",
+    imageUrl: "https://i.postimg.cc/hfS7ZPqP/image.jpg",
   }
 ];

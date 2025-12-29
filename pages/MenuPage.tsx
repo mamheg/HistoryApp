@@ -216,13 +216,12 @@ export const MenuPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="flex items-center justify-center py-4 mb-2 animate-fade-in">
+      <div className="h-20 flex items-center justify-center py-4 mb-2 animate-fade-in">
         <img
-          src="items/logo.png"
+          src="https://i.postimg.cc/kGwgZZvj/Only-the-inscription-2k-202512270048-Photoroom.png"
           alt="Logo"
-          className="h-16 w-auto object-contain"
+          className="h-25 object-contain"
         />
-        <h1>History</h1>
       </div>
 
       <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300">
