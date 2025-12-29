@@ -7,7 +7,7 @@ echo "🔄 Обновление History-front..."
 # Сохраняем важные файлы
 echo "📦 Сохраняем базу данных и public..."
 cp -r public /tmp/history_public_backup 2>/dev/null || true
-cp history.db /tmp/history_db_backup 2>/dev/null || true
+cp backend/database.db /tmp/database_backup.db 2>/dev/null || true
 
 # Получаем обновления
 echo "⬇️ Получаем код из GitHub..."
@@ -16,7 +16,7 @@ git reset --hard origin/main
 
 # Восстанавливаем важные файлы
 echo "📥 Восстанавливаем базу данных и public..."
-cp /tmp/history_db_backup history.db 2>/dev/null || true
+cp /tmp/database_backup.db backend/database.db 2>/dev/null || true
 cp -r /tmp/history_public_backup/* public/ 2>/dev/null || true
 
 # Очищаем временные файлы

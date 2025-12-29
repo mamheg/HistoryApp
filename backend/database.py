@@ -5,7 +5,7 @@ import os
 
 # Use environment variable for Render (Postgres) or fallback to local SQLite
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(BASE_DIR, "hoffee.db")
+DB_PATH = os.path.join(BASE_DIR, "database.db")
 SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH}")
 
 # Handle Postgres URL format for SQLAlchemy (postgres:// -> postgresql://)
