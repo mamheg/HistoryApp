@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Plus, 
-  Trash2, 
-  Edit3, 
+import {
+  Plus,
+  Trash2,
+  Edit3,
   ExternalLink,
   Coffee,
   ChevronRight,
@@ -17,24 +17,28 @@ import {
   AlertTriangle,
   Undo2,
   History,
-  ArrowRight
+  ArrowRight,
+  Loader2
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 import { Product } from '../types';
+import { api } from '../services/api';
 
 export const AdminPage: React.FC = () => {
-  const { products, categories, addProduct, updateProduct, deleteProduct, undoLastOperation, lastOperation } = useAppStore();
+  const { products, categories, addProduct, updateProduct, deleteProduct, undoLastOperation, lastOperation, user, loadMenu } = useAppStore();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  
+
   const [activeTab, setActiveTab] = useState<'menu' | 'stats'>('menu');
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleEditProduct = (p: Product) => {
-    setEditingProduct({...p});
+    setEditingProduct({ ...p });
     setIsEditModalOpen(true);
   };
 
@@ -67,21 +71,59 @@ export const AdminPage: React.FC = () => {
     }
   };
 
-  const saveProduct = () => {
-    if (!editingProduct) return;
-    const exists = products.find(p => p.id === editingProduct.id);
-    if (exists) {
-      updateProduct(editingProduct);
-    } else {
-      addProduct(editingProduct);
+  const saveProduct = async () => {
+    if (!editingProduct || !user) return;
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      const isNew = !products.find(p => p.id === editingProduct.id || (typeof editingProduct.id === 'number' && editingProduct.id > 1000000000));
+
+      // Transform frontend product format to backend format
+      const productData = {
+        name: editingProduct.name,
+        description: editingProduct.description || '',
+        price: editingProduct.price,
+        category_id: editingProduct.categoryId,
+        image_url: editingProduct.imageUrl || '',
+        sort_order: 0
+      };
+
+      if (isNew || editingProduct.id > 1000000000) {
+        // Create new product
+        await api.adminCreateProduct(user.id, productData);
+      } else {
+        // Update existing product
+        await api.adminUpdateProduct(user.id, editingProduct.id, productData);
+      }
+
+      // Reload menu from database to reflect changes
+      await loadMenu();
+      setIsEditModalOpen(false);
+    } catch (err: any) {
+      console.error('Error saving product:', err);
+      setError(err.message || 'Ошибка сохранения');
+    } finally {
+      setIsSaving(false);
     }
-    setIsEditModalOpen(false);
   };
 
-  const confirmDelete = () => {
-    if (productToDelete) {
-      deleteProduct(productToDelete.id);
+  const confirmDelete = async () => {
+    if (!productToDelete || !user) return;
+    setIsSaving(true);
+    setError(null);
+
+    try {
+      await api.adminDeleteProduct(user.id, productToDelete.id);
+
+      // Reload menu from database
+      await loadMenu();
       setProductToDelete(null);
+    } catch (err: any) {
+      console.error('Error deleting product:', err);
+      setError(err.message || 'Ошибка удаления');
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -106,7 +148,7 @@ export const AdminPage: React.FC = () => {
 
       <div className="px-4">
         {/* View Switcher */}
-        <button 
+        <button
           onClick={() => navigate('/')}
           className="w-full mb-6 bg-white border border-slate-200 p-4 rounded-2xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all"
         >
@@ -124,15 +166,15 @@ export const AdminPage: React.FC = () => {
 
         {/* Tabs with Slider */}
         <div className="relative flex gap-1 bg-white p-1 rounded-2xl border border-slate-200 mb-6">
-          <div 
+          <div
             className="absolute top-1 bottom-1 bg-[#736153] rounded-xl transition-all duration-300 ease-out shadow-lg"
-            style={{ 
-              width: 'calc(50% - 2px)', 
-              left: `calc(${tabIndex * 50}% + ${tabIndex === 0 ? '2px' : '0px'})` 
+            style={{
+              width: 'calc(50% - 2px)',
+              left: `calc(${tabIndex * 50}% + ${tabIndex === 0 ? '2px' : '0px'})`
             }}
           />
           {(['menu', 'stats'] as const).map(tab => (
-            <button 
+            <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`flex-1 py-3 rounded-xl font-bold text-xs transition-all uppercase tracking-wider relative z-10 ${activeTab === tab ? 'text-white' : 'text-slate-400'}`}
@@ -150,42 +192,41 @@ export const AdminPage: React.FC = () => {
               <div className="bg-white border border-[#736153]/20 p-5 rounded-[2rem] shadow-sm mb-6 animate-pop-in overflow-hidden relative group">
                 {/* Decorative background accent */}
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#736153]/10 rounded-full -mr-12 -mt-12 transition-transform group-hover:scale-110 duration-500" />
-                
+
                 <div className="flex items-center gap-2 text-[#736153] mb-4 relative z-10">
                   <History size={16} />
                   <span className="text-[10px] font-black uppercase tracking-[0.2em]">Последняя операция</span>
                 </div>
-                
+
                 <div className="flex items-start gap-4 mb-6 relative z-10">
-                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${
-                     lastOperation.type === 'update' ? 'bg-orange-50 text-orange-600' : 
-                     lastOperation.type === 'add' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
-                   }`}>
-                      {lastOperation.type === 'update' ? <Edit3 size={20} /> : 
-                       lastOperation.type === 'add' ? <Plus size={20} /> : <Trash2 size={20} />}
-                   </div>
-                   <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold text-slate-900 truncate">
-                        {lastOperation.type === 'update' ? 'Отредактировано:' : 
-                         lastOperation.type === 'add' ? 'Добавлено:' : 'Удалено:'} {lastOperation.productName}
-                      </p>
-                      {lastOperation.changes && (
-                        <div className="mt-2 space-y-1 bg-slate-50/50 p-2 rounded-xl border border-slate-100">
-                          {lastOperation.changes.map((ch, i) => (
-                            <div key={i} className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-tight">
-                              <span className="text-slate-400">{ch.field}:</span>
-                              <span className="text-slate-600">{ch.from}</span>
-                              <ArrowRight size={10} className="text-slate-300" />
-                              <span className="text-[#736153]">{ch.to}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                   </div>
+                  <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 shadow-sm ${lastOperation.type === 'update' ? 'bg-orange-50 text-orange-600' :
+                    lastOperation.type === 'add' ? 'bg-green-50 text-green-600' : 'bg-red-50 text-red-600'
+                    }`}>
+                    {lastOperation.type === 'update' ? <Edit3 size={20} /> :
+                      lastOperation.type === 'add' ? <Plus size={20} /> : <Trash2 size={20} />}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-bold text-slate-900 truncate">
+                      {lastOperation.type === 'update' ? 'Отредактировано:' :
+                        lastOperation.type === 'add' ? 'Добавлено:' : 'Удалено:'} {lastOperation.productName}
+                    </p>
+                    {lastOperation.changes && (
+                      <div className="mt-2 space-y-1 bg-slate-50/50 p-2 rounded-xl border border-slate-100">
+                        {lastOperation.changes.map((ch, i) => (
+                          <div key={i} className="flex items-center gap-1.5 text-[10px] text-slate-500 font-bold uppercase tracking-tight">
+                            <span className="text-slate-400">{ch.field}:</span>
+                            <span className="text-slate-600">{ch.from}</span>
+                            <ArrowRight size={10} className="text-slate-300" />
+                            <span className="text-[#736153]">{ch.to}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="pt-4 border-t border-slate-50 relative z-10">
-                  <button 
+                  <button
                     onClick={undoLastOperation}
                     className="w-full flex items-center justify-center gap-2 bg-[#736153] text-white py-3 rounded-xl text-xs font-black uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-[#736153]/30"
                   >
@@ -198,7 +239,7 @@ export const AdminPage: React.FC = () => {
 
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-bold text-slate-900">Каталог товаров</h2>
-              <button 
+              <button
                 onClick={handleAddNewProduct}
                 className="bg-[#736153] text-white p-2 rounded-xl shadow-lg active:scale-90 transition-all"
               >
@@ -255,7 +296,7 @@ export const AdminPage: React.FC = () => {
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-[#736153] text-white p-6 rounded-3xl shadow-lg">
               <h3 className="font-bold mb-2">Аналитика недели</h3>
               <p className="text-[#ece9e2]/70 text-xs mb-4">Статистика продаж по категориям</p>
@@ -290,13 +331,13 @@ export const AdminPage: React.FC = () => {
               Вы уверены, что хотите удалить <span className="font-bold text-slate-900">«{productToDelete.name}»</span>? Это действие можно будет отменить.
             </p>
             <div className="flex flex-col gap-3">
-              <button 
+              <button
                 onClick={confirmDelete}
                 className="w-full bg-red-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-red-200 active:scale-95 transition-all"
               >
                 Да, удалить
               </button>
-              <button 
+              <button
                 onClick={() => setProductToDelete(null)}
                 className="w-full bg-slate-100 text-slate-500 py-4 rounded-2xl font-bold active:scale-95 transition-all"
               >
@@ -327,7 +368,7 @@ export const AdminPage: React.FC = () => {
                   ) : (
                     <ImageIcon size={24} />
                   )}
-                  <button 
+                  <button
                     onClick={() => fileInputRef.current?.click()}
                     className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity"
                   >
@@ -336,29 +377,29 @@ export const AdminPage: React.FC = () => {
                   <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleFileChange} />
                 </div>
                 <div className="flex-1 space-y-3">
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     placeholder="Название товара"
                     className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
                     value={editingProduct.name}
-                    onChange={e => setEditingProduct({...editingProduct, name: e.target.value})}
+                    onChange={e => setEditingProduct({ ...editingProduct, name: e.target.value })}
                   />
-                  <input 
-                    type="number" 
+                  <input
+                    type="number"
                     placeholder="Цена (₽)"
                     className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm focus:ring-2 focus:ring-[#736153]"
                     value={editingProduct.price || ''}
-                    onChange={e => setEditingProduct({...editingProduct, price: Number(e.target.value)})}
+                    onChange={e => setEditingProduct({ ...editingProduct, price: Number(e.target.value) })}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Категория</label>
-                <select 
+                <select
                   className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm"
                   value={editingProduct.categoryId}
-                  onChange={e => setEditingProduct({...editingProduct, categoryId: e.target.value})}
+                  onChange={e => setEditingProduct({ ...editingProduct, categoryId: e.target.value })}
                 >
                   {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                 </select>
@@ -366,20 +407,36 @@ export const AdminPage: React.FC = () => {
 
               <div>
                 <label className="text-[10px] font-bold text-slate-400 uppercase mb-2 block">Описание</label>
-                <textarea 
+                <textarea
                   placeholder="Опишите продукт..."
                   className="w-full bg-slate-50 border-none rounded-xl p-3 text-sm h-24 resize-none"
                   value={editingProduct.description}
-                  onChange={e => setEditingProduct({...editingProduct, description: e.target.value})}
+                  onChange={e => setEditingProduct({ ...editingProduct, description: e.target.value })}
                 />
               </div>
 
-              <button 
+              {error && (
+                <div className="bg-red-50 text-red-600 text-sm p-3 rounded-xl mb-4">
+                  {error}
+                </div>
+              )}
+
+              <button
                 onClick={saveProduct}
-                className="w-full bg-[#736153] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#736153]/30 flex items-center justify-center gap-2 active:scale-95 transition-all"
+                disabled={isSaving}
+                className="w-full bg-[#736153] text-white py-4 rounded-2xl font-bold shadow-lg shadow-[#736153]/30 flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Save size={20} />
-                Сохранить изменения
+                {isSaving ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    Сохранение...
+                  </>
+                ) : (
+                  <>
+                    <Save size={20} />
+                    Сохранить изменения
+                  </>
+                )}
               </button>
             </div>
           </div>
