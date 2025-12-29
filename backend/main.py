@@ -54,6 +54,119 @@ def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_order
 
+# ============= PHASE 3: MENU API =============
+
+@app.get("/api/menu", response_model=schemas.MenuResponse)
+def get_menu(db: Session = Depends(get_db)):
+    """Public endpoint: Get full menu with categories, products, and modifiers"""
+    categories = crud.get_categories(db)
+    return {"categories": categories}
+
+# --- Admin: Categories ---
+def check_admin(user_id: int, db: Session):
+    """Helper to verify admin status"""
+    user = crud.get_user(db, user_id)
+    if not user or not user.is_admin:
+        raise HTTPException(status_code=403, detail="Admin access required")
+    return user
+
+@app.post("/api/admin/categories", response_model=schemas.Category)
+def admin_create_category(
+    category: schemas.CategoryCreate,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    existing = crud.get_category(db, category.id)
+    if existing:
+        raise HTTPException(status_code=400, detail="Category already exists")
+    return crud.create_category(db, category)
+
+@app.put("/api/admin/categories/{category_id}", response_model=schemas.Category)
+def admin_update_category(
+    category_id: str,
+    category_update: schemas.CategoryUpdate,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    updated = crud.update_category(db, category_id, category_update)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Category not found")
+    return updated
+
+@app.delete("/api/admin/categories/{category_id}")
+def admin_delete_category(
+    category_id: str,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    if not crud.delete_category(db, category_id):
+        raise HTTPException(status_code=404, detail="Category not found")
+    return {"ok": True}
+
+# --- Admin: Products ---
+@app.post("/api/admin/products", response_model=schemas.Product)
+def admin_create_product(
+    product: schemas.ProductCreate,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    # Check category exists
+    if not crud.get_category(db, product.category_id):
+        raise HTTPException(status_code=400, detail="Category not found")
+    return crud.create_product(db, product)
+
+@app.put("/api/admin/products/{product_id}", response_model=schemas.Product)
+def admin_update_product(
+    product_id: int,
+    product_update: schemas.ProductUpdate,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    updated = crud.update_product(db, product_id, product_update)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Product not found")
+    return updated
+
+@app.delete("/api/admin/products/{product_id}")
+def admin_delete_product(
+    product_id: int,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    if not crud.delete_product(db, product_id):
+        raise HTTPException(status_code=404, detail="Product not found")
+    return {"ok": True}
+
+# --- Admin: Modifiers ---
+@app.post("/api/admin/products/{product_id}/modifiers", response_model=schemas.Modifier)
+def admin_add_modifier(
+    product_id: int,
+    modifier: schemas.ModifierCreate,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    if not crud.get_product(db, product_id):
+        raise HTTPException(status_code=404, detail="Product not found")
+    return crud.add_modifier(db, product_id, modifier)
+
+@app.delete("/api/admin/modifiers/{modifier_id}")
+def admin_delete_modifier(
+    modifier_id: int,
+    admin_id: int,
+    db: Session = Depends(get_db)
+):
+    check_admin(admin_id, db)
+    if not crud.delete_modifier(db, modifier_id):
+        raise HTTPException(status_code=404, detail="Modifier not found")
+    return {"ok": True}
+
 # Serve Static Files (CSS, JS, Images)
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse

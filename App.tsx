@@ -44,8 +44,8 @@ const Navigation = () => {
 
               <span
                 className={`text-[11px] font-bold transition-all duration-300 ease-out absolute bottom-4 ${isActive
-                    ? 'opacity-100 translate-y-0 text-blue-600 scale-100'
-                    : 'opacity-0 translate-y-4 text-gray-400 scale-75 pointer-events-none'
+                  ? 'opacity-100 translate-y-0 text-blue-600 scale-100'
+                  : 'opacity-0 translate-y-4 text-gray-400 scale-75 pointer-events-none'
                   }`}
               >
                 {item.label}
@@ -59,7 +59,7 @@ const Navigation = () => {
 };
 
 const AppContent: React.FC = () => {
-  const { setAuth, isAuth, isAdmin } = useAppStore();
+  const { setAuth, isAuth, isAdmin, loadMenu } = useAppStore();
   const location = useLocation();
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
@@ -128,6 +128,11 @@ const AppContent: React.FC = () => {
       setAuth(MOCK_USER);
     }
   }, [isAuth, setAuth]);
+
+  // Phase 3: Load menu from API
+  React.useEffect(() => {
+    loadMenu();
+  }, [loadMenu]);
 
   if (!isAuth) {
     return (

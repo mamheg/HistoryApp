@@ -82,5 +82,82 @@ export const api = {
             throw new Error(`Order failed: ${response.status}`);
         }
         return response.json();
+    },
+
+    // Phase 3: Menu API
+    async getMenu(): Promise<{ categories: any[] }> {
+        const response = await fetch(`${API_URL}/menu`);
+        if (!response.ok) {
+            throw new Error(`Failed to load menu: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    // Admin: Products
+    async adminCreateProduct(adminId: number, product: any): Promise<any> {
+        const response = await fetch(`${API_URL}/admin/products?admin_id=${adminId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(product),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to create product: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    async adminUpdateProduct(adminId: number, productId: number, updates: any): Promise<any> {
+        const response = await fetch(`${API_URL}/admin/products/${productId}?admin_id=${adminId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to update product: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    async adminDeleteProduct(adminId: number, productId: number): Promise<void> {
+        const response = await fetch(`${API_URL}/admin/products/${productId}?admin_id=${adminId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to delete product: ${response.status}`);
+        }
+    },
+
+    // Admin: Categories
+    async adminCreateCategory(adminId: number, category: any): Promise<any> {
+        const response = await fetch(`${API_URL}/admin/categories?admin_id=${adminId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(category),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to create category: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    async adminUpdateCategory(adminId: number, categoryId: string, updates: any): Promise<any> {
+        const response = await fetch(`${API_URL}/admin/categories/${categoryId}?admin_id=${adminId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updates),
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to update category: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    async adminDeleteCategory(adminId: number, categoryId: string): Promise<void> {
+        const response = await fetch(`${API_URL}/admin/categories/${categoryId}?admin_id=${adminId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to delete category: ${response.status}`);
+        }
     }
 };

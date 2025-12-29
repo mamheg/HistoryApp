@@ -2,6 +2,7 @@
 import { create } from 'zustand';
 import { CartItem, Product, User, Category, Achievement, OrderHistoryItem } from '../types';
 import { PRODUCTS, CATEGORIES } from '../services/mockData';
+import { api } from '../services/api';
 
 export const COFFEE_LEVELS: Achievement[] = [
   { id: '1', name: 'Новичок', description: 'Ваше первое знакомство с H🪶STORY. Добро пожаловать в семью!', pointsRequired: 0, icon: '🐣', color: 'bg-emerald-400' },
@@ -59,6 +60,9 @@ interface AppState {
   updateProduct: (product: Product) => void;
   deleteProduct: (id: number) => void;
   undoLastOperation: () => void;
+  loadMenu: () => Promise<void>;
+  setProducts: (products: Product[]) => void;
+  setCategories: (categories: Category[]) => void;
 }
 
 export const ADMIN_TELEGRAM_IDS = [1962824399, 937710441];
@@ -79,8 +83,8 @@ export const useAppStore = create<AppState>((set, get) => ({
     { id: 'ORD-1245', date: '08.05.2024', items: 'Флэт Уайт', total: 280, status: 'completed' }
   ],
   activeCategory: 'coffee',
-  products: PRODUCTS,
-  categories: CATEGORIES,
+  products: PRODUCTS, // Fallback, will be overwritten by loadMenu()
+  categories: CATEGORIES, // Fallback, will be overwritten by loadMenu()
   favorites: savedFavorites ? JSON.parse(savedFavorites) : [],
   orderStats: savedStats ? JSON.parse(savedStats) : {},
   lastOperation: null,
@@ -322,4 +326,61 @@ export const useAppStore = create<AppState>((set, get) => ({
       lastOperation: null
     };
   }),
+
+  // Phase 3: Menu loading from API
+  loadMenu: async () => {
+    try {
+      const menuData = await api.getMenu();
+      const products: Product[] = [];
+      const categories: Category[] = [];
+
+      for (const cat of menuData.categories) {
+        categories.push({
+          id: cat.id,
+          name: cat.name
+        });
+
+        for (const prod of cat.products) {
+          // Transform modifiers from backend format to frontend format
+          const modifiers: Product['modifiers'] = {
+            sizes: [],
+            milks: [],
+            syrups: []
+          };
+
+          for (const mod of prod.modifiers || []) {
+            const modItem = { id: mod.name.toLowerCase().replace(/\s+/g, '_'), name: mod.name, price: mod.price };
+            if (mod.modifier_type === 'size') {
+              modifiers.sizes!.push(modItem);
+            } else if (mod.modifier_type === 'milk') {
+              modifiers.milks!.push(modItem);
+            } else if (mod.modifier_type === 'syrup') {
+              modifiers.syrups!.push(modItem);
+            }
+          }
+
+          products.push({
+            id: prod.id,
+            name: prod.name,
+            description: prod.description,
+            price: prod.price,
+            categoryId: prod.category_id,
+            imageUrl: prod.image_url,
+            modifiers: (modifiers.sizes!.length > 0 || modifiers.milks!.length > 0 || modifiers.syrups!.length > 0)
+              ? modifiers
+              : undefined
+          });
+        }
+      }
+
+      set({ products, categories });
+      console.log('[Store] Menu loaded from API:', categories.length, 'categories,', products.length, 'products');
+    } catch (error) {
+      console.error('[Store] Failed to load menu from API, using fallback:', error);
+      // Keep the fallback data from mockData.ts
+    }
+  },
+
+  setProducts: (products) => set({ products }),
+  setCategories: (categories) => set({ categories }),
 }));
