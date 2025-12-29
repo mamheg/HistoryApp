@@ -86,7 +86,15 @@ export const api = {
 
     // Phase 3: Menu API
     async getMenu(): Promise<{ categories: any[] }> {
-        const response = await fetch(`${API_URL}/menu`);
+        // Add timestamp to prevent aggressive caching in Telegram WebView
+        const timestamp = Date.now();
+        const response = await fetch(`${API_URL}/menu?_t=${timestamp}`, {
+            cache: 'no-store',
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache'
+            }
+        });
         if (!response.ok) {
             throw new Error(`Failed to load menu: ${response.status}`);
         }
