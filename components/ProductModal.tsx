@@ -97,6 +97,7 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onC
             <video
               ref={videoRef}
               src={product.videoUrl}
+              poster={product.imageUrl}
               className="h-full w-auto object-contain drop-shadow-xl rounded-2xl"
               autoPlay
               muted
@@ -136,8 +137,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onC
                     className="flex flex-col items-center gap-2 min-w-[72px] group active:scale-95 transition-transform duration-200"
                   >
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${selectedMilk?.id === milk.id
-                        ? 'bg-blue-50 border-blue-500 shadow-md scale-105'
-                        : 'bg-gray-50 border-transparent group-hover:bg-gray-100'
+                      ? 'bg-blue-50 border-blue-500 shadow-md scale-105'
+                      : 'bg-gray-50 border-transparent group-hover:bg-gray-100'
                       }`}>
                       <Milk size={24} className={`transition-colors duration-300 ${selectedMilk?.id === milk.id ? 'text-blue-600' : 'text-gray-400'}`} />
                     </div>
@@ -157,8 +158,8 @@ export const ProductModal: React.FC<ProductModalProps> = ({ product, isOpen, onC
                     className="flex flex-col items-center gap-2 min-w-[72px] group active:scale-95 transition-transform duration-200"
                   >
                     <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${selectedSyrup?.id === syrup.id
-                        ? 'bg-orange-50 border-orange-500 shadow-md scale-105'
-                        : 'bg-gray-50 border-transparent group-hover:bg-gray-100'
+                      ? 'bg-orange-50 border-orange-500 shadow-md scale-105'
+                      : 'bg-gray-50 border-transparent group-hover:bg-gray-100'
                       }`}>
                       <Droplets size={24} className={`transition-colors duration-300 ${selectedSyrup?.id === syrup.id ? 'text-orange-600' : 'text-gray-400'}`} />
                     </div>

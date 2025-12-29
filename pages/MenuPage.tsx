@@ -88,6 +88,31 @@ export const MenuPage: React.FC = () => {
     setIsModalOpen(false);
   };
 
+  // Preload all videos for instant playback (especially important for mobile)
+  useEffect(() => {
+    const preloadedVideos: HTMLVideoElement[] = [];
+
+    products.forEach(p => {
+      if (p.videoUrl) {
+        const video = document.createElement('video');
+        video.preload = 'auto';
+        video.muted = true;
+        video.playsInline = true;
+        video.src = p.videoUrl;
+        video.load();
+        preloadedVideos.push(video);
+      }
+    });
+
+    // Cleanup on unmount
+    return () => {
+      preloadedVideos.forEach(v => {
+        v.src = '';
+        v.load();
+      });
+    };
+  }, [products]);
+
   useEffect(() => {
     const handleScroll = () => {
       if (!visibleCategories.length) return;
