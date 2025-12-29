@@ -190,6 +190,19 @@ if os.path.exists(DIST_DIR):
     if os.path.exists(assets_path):
         app.mount("/assets", StaticFiles(directory=assets_path), name="assets")
     
+    # Mount public folders for videos and images
+    PUBLIC_DIR = os.path.join(BASE_DIR, "../public")
+    videos_path = os.path.join(PUBLIC_DIR, "videos")
+    images_path = os.path.join(PUBLIC_DIR, "images")
+    
+    if os.path.exists(videos_path):
+        app.mount("/videos", StaticFiles(directory=videos_path), name="videos")
+        print(f"Serving videos from: {videos_path}")
+    
+    if os.path.exists(images_path):
+        app.mount("/images", StaticFiles(directory=images_path), name="images")
+        print(f"Serving images from: {images_path}")
+    
     # Serve index.html for root and any other path (SPA support)
     @app.get("/{full_path:path}")
     async def serve_spa(full_path: str):
