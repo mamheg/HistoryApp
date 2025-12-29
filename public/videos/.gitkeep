@@ -1,0 +1,3 @@
+# Videos folder
+Place product video animations here (MP4 or WebM, 1-3 seconds).
+Use path like `/videos/filename.mp4` in database.
