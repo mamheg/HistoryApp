@@ -58,6 +58,7 @@ class Product(Base):
     price = Column(Integer, nullable=False)
     category_id = Column(String, ForeignKey("categories.id"))
     image_url = Column(String, nullable=True)
+    video_url = Column(String, nullable=True)  # Video animation URL
     sort_order = Column(Integer, default=0)
     
     category = relationship("Category", back_populates="products")

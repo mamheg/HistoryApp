@@ -58,6 +58,7 @@ class ProductBase(BaseModel):
     price: int
     category_id: str
     image_url: Optional[str] = None
+    video_url: Optional[str] = None
     sort_order: int = 0
 
 class ProductCreate(ProductBase):
@@ -69,6 +70,7 @@ class ProductUpdate(BaseModel):
     price: Optional[int] = None
     category_id: Optional[str] = None
     image_url: Optional[str] = None
+    video_url: Optional[str] = None
     sort_order: Optional[int] = None
 
 class Product(ProductBase):

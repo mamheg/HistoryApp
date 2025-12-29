@@ -36,6 +36,7 @@ export interface Product {
   description: string;
   price: number;
   imageUrl: string;
+  videoUrl?: string;  // Optional video animation URL
   categoryId: string;
   modifiers?: {
     sizes: ProductModifier[];

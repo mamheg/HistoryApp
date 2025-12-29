@@ -366,6 +366,7 @@ export const useAppStore = create<AppState>((set, get) => ({
             price: prod.price,
             categoryId: prod.category_id,
             imageUrl: prod.image_url,
+            videoUrl: prod.video_url,  // Video animation URL
             modifiers: (modifiers.sizes!.length > 0 || modifiers.milks!.length > 0 || modifiers.syrups!.length > 0)
               ? modifiers
               : undefined

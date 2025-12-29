@@ -163,6 +163,7 @@ def create_product(db: Session, product: schemas.ProductCreate):
         price=product.price,
         category_id=product.category_id,
         image_url=product.image_url,
+        video_url=product.video_url,
         sort_order=product.sort_order
     )
     db.add(db_product)
@@ -197,6 +198,8 @@ def update_product(db: Session, product_id: int, product_update: schemas.Product
             db_product.category_id = product_update.category_id
         if product_update.image_url is not None:
             db_product.image_url = product_update.image_url
+        if product_update.video_url is not None:
+            db_product.video_url = product_update.video_url
         if product_update.sort_order is not None:
             db_product.sort_order = product_update.sort_order
         db.commit()
