@@ -241,13 +241,7 @@ export const MenuPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="h-20 flex items-center justify-center py-4 mb-2 animate-fade-in">
-        <img
-          src="images/logo.png"
-          alt="Logo"
-          className="h-25 object-contain"
-        />
-      </div>
+
 
       <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300 md:top-0 md:pt-4">
         <div className="px-4 mb-4 flex gap-2">
