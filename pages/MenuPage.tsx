@@ -207,9 +207,9 @@ export const MenuPage: React.FC = () => {
           <Heart size={14} fill={favorites.includes(product.id) ? "currentColor" : "none"} />
         </button>
       </div>
-      <h3 className="font-semibold text-gray-900 text-sm mb-1 line-clamp-2 leading-tight">{product.name}</h3>
+      <h3 className="font-medium text-gray-900 text-sm mb-1 line-clamp-2 leading-tight">{product.name}</h3>
       <div className="mt-auto flex items-center justify-between">
-        <span className="font-bold text-gray-900">{product.price}₽</span>
+        <span className="font-medium text-gray-900">{product.price}₽</span>
         <div className="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center transition-transform active:scale-90">
           <Plus size={18} strokeWidth={3} />
         </div>
