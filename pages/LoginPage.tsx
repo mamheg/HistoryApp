@@ -10,11 +10,11 @@ export const LoginPage: React.FC = () => {
 
   const handleTelegramLogin = () => {
     setIsLoading(true);
-    
+
     setTimeout(() => {
       const tg = (window as any).Telegram?.WebApp;
       const tgUser = tg?.initDataUnsafe?.user;
-      
+
       if (tgUser) {
         setAuth({
           id: tgUser.id,
@@ -41,14 +41,14 @@ export const LoginPage: React.FC = () => {
       <div className="w-full max-w-sm z-10 animate-fade-in flex flex-col items-center">
         <div className="flex flex-col items-center mb-6">
           <div className="w-48 h-48 mb-2 animate-pop-in drop-shadow-2xl">
-            <img 
-              src="https://lh3.googleusercontent.com/gg-dl/ABS2GSnbHmwcV_dtr6T3795R2jYas4ndZpLvAMVWZrrAl3iGVMU6a1f5jejMxsNeRnYNf1K7wOC1rW67INraW7hVsbUDcux9tuV4ME1598da4gPQskSuXMEiwReLkd0Qx3bgVWGty2-k9MToJJXkgdwAfPlVUe8Hj5eZpPMFUB9xOFwnwMfioA=s1024-rj" 
-              alt="H🪶STORY Logo" 
+            <img
+              src="images/logo.png"
+              alt="Logo"
               className="w-full h-full object-contain"
             />
           </div>
           <p className="text-slate-500 text-center text-sm leading-relaxed px-4 mt-2">
-            Премиальный кофе в один клик. <br/>Авторизуйтесь через Telegram для старта.
+            Премиальный кофе в один клик. <br />Авторизуйтесь через Telegram для старта.
           </p>
         </div>
 
@@ -76,11 +76,10 @@ export const LoginPage: React.FC = () => {
         <button
           onClick={handleTelegramLogin}
           disabled={isLoading}
-          className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg ${
-            isLoading 
-            ? 'bg-slate-200 text-slate-400 cursor-wait' 
-            : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200'
-          } animate-slide-up stagger-3`}
+          className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all active:scale-95 shadow-lg ${isLoading
+              ? 'bg-slate-200 text-slate-400 cursor-wait'
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-200'
+            } animate-slide-up stagger-3`}
         >
           {isLoading ? (
             <div className="w-6 h-6 border-2 border-slate-300 border-t-blue-600 rounded-full animate-spin"></div>

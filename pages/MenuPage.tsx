@@ -220,7 +220,7 @@ export const MenuPage: React.FC = () => {
   if (!user) return null;
 
   return (
-    <div className="pb-32 pt-6 bg-[#F3F4F6] min-h-screen relative">
+    <div className="pb-32 md:pb-8 pt-6 bg-[#F3F4F6] min-h-screen relative">
       <div className="px-4 mb-4" ref={loyaltyRef}>
         {isAdmin && (
           <button
@@ -243,13 +243,13 @@ export const MenuPage: React.FC = () => {
 
       <div className="h-20 flex items-center justify-center py-4 mb-2 animate-fade-in">
         <img
-          src="https://i.postimg.cc/kGwgZZvj/Only-the-inscription-2k-202512270048-Photoroom.png"
+          src="images/logo.png"
           alt="Logo"
           className="h-25 object-contain"
         />
       </div>
 
-      <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300">
+      <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300 md:top-0 md:pt-4">
         <div className="px-4 mb-4 flex gap-2">
           <div className="relative flex-1">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -351,7 +351,7 @@ export const MenuPage: React.FC = () => {
             </div>
 
             {filteredProducts.length > 0 ? (
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {filteredProducts.map((product, index) => renderProductCard(product, index, true))}
               </div>
             ) : (
@@ -377,7 +377,7 @@ export const MenuPage: React.FC = () => {
             return (
               <div key={cat.id} ref={(el) => { categoryRefs.current[cat.id] = el; }} className="scroll-mt-40">
                 <h2 className="text-xl font-bold text-gray-900 mb-4 px-1">{cat.name}</h2>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                   {categoryProducts.map((product, index) => renderProductCard(product, index))}
                 </div>
               </div>

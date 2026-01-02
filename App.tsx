@@ -13,50 +13,9 @@ import { SupportPage } from './pages/SupportPage';
 import { ConfirmScanPage } from './pages/ConfirmScanPage';
 import { useAppStore } from './store/useAppStore';
 import { MOCK_USER } from './services/mockData';
+import { Layout } from './components/Layout';
 
-const Navigation = () => {
-  const location = useLocation();
 
-  const navItems = [
-    { path: '/', icon: Home, label: 'Меню' },
-    { path: '/profile', icon: UserIcon, label: 'Профиль' },
-  ];
-
-  return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 pb-safe z-50 shadow-[0_-4px_20px_rgba(0,0,0,0.03)]">
-      <div className="flex justify-around items-center h-20 max-w-lg mx-auto px-2">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          const Icon = item.icon;
-
-          return (
-            <Link
-              key={item.path}
-              to={item.path}
-              className="flex-1 flex flex-col items-center justify-center h-full relative group transition-all"
-            >
-              <div
-                className={`relative transition-all duration-300 ease-out transform ${isActive ? '-translate-y-2' : 'translate-y-0'
-                  } ${isActive ? 'text-blue-600' : 'text-gray-400'}`}
-              >
-                <Icon size={24} strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-
-              <span
-                className={`text-[11px] font-bold transition-all duration-300 ease-out absolute bottom-4 ${isActive
-                  ? 'opacity-100 translate-y-0 text-blue-600 scale-100'
-                  : 'opacity-0 translate-y-4 text-gray-400 scale-75 pointer-events-none'
-                  }`}
-              >
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
-  );
-};
 
 const AppContent: React.FC = () => {
   const { setAuth, isAuth, isAdmin, loadMenu } = useAppStore();
@@ -149,10 +108,10 @@ const AppContent: React.FC = () => {
   }
 
   // Скрываем навигацию на странице подтверждения сканирования
-  const isConfirmPage = location.pathname.startsWith('/confirm-scan');
+  // Logic moved to Layout component
 
   return (
-    <div className="min-h-screen font-sans text-gray-900 bg-[#F3F4F6]">
+    <Layout>
       <Routes>
         <Route path="/" element={<MenuPage />} />
         <Route path="/cart" element={<CartPage />} />
@@ -165,8 +124,7 @@ const AppContent: React.FC = () => {
         <Route path="/confirm-scan/:userId" element={<ConfirmScanPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-      {location.pathname !== '/admin' && !isKeyboardOpen && !isConfirmPage && <Navigation />}
-    </div>
+    </Layout>
   );
 };
 
