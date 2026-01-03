@@ -8,13 +8,14 @@ import {
   Fingerprint,
   Settings,
   X,
-  Save
+  Save,
+  ShieldAlert
 } from 'lucide-react';
 import { useAppStore } from '../store/useAppStore';
 import { useNavigate } from 'react-router-dom';
 
 export const ProfilePage: React.FC = () => {
-  const { user, updateProfile } = useAppStore();
+  const { user, updateProfile, isAdmin } = useAppStore();
   const navigate = useNavigate();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -108,6 +109,16 @@ export const ProfilePage: React.FC = () => {
           <Gift size={12} className="text-blue-600" />
           <p className="text-blue-600 text-xs font-bold uppercase tracking-wider">{user.level}</p>
         </div>
+
+        {isAdmin && (
+          <div
+            onClick={() => navigate('/admin')}
+            className="mt-4 flex items-center gap-2 px-4 py-2 bg-[#736153] rounded-xl cursor-pointer active:scale-95 transition-all shadow-md shadow-[#736153]/30"
+          >
+            <ShieldAlert size={14} className="text-white" />
+            <span className="text-xs font-bold text-white uppercase tracking-wider">Админ. панель</span>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-2 gap-4 mb-8">
