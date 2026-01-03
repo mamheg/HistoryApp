@@ -407,13 +407,13 @@ export const MenuPage: React.FC = () => {
             className={`bg-white/70 backdrop-blur-xl border border-white/40 p-1.5 pl-6 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] flex items-center gap-4 cursor-pointer active:scale-95 transition-all hover:bg-white/80 ${isCartAnimating ? 'ring-2 ring-blue-500/20' : ''}`}
           >
             <div className="flex flex-col items-start">
-              <span className="text-sm font-black text-slate-900 leading-none mb-0.5">{cartTotal} ₽</span>
-              <span className={`text-[10px] font-bold text-slate-600 leading-none transition-colors ${isCartAnimating ? 'text-blue-600' : ''}`}>
+              <span className="text-lg font-black text-slate-900 leading-none mb-0.5">{cartTotal} ₽</span>
+              <span className={`text-[10px] font-bold text-slate-600 leading-none transition-colors ${isCartAnimating ? 'text-[#736153]' : ''}`}>
                 {cartItemsCount} тов.
               </span>
             </div>
-            <div className={`w-11 h-11 bg-blue-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-blue-500/30 transition-transform ${isCartAnimating ? 'scale-110 rotate-12' : ''}`}>
-              <ShoppingBag size={18} strokeWidth={2.5} className="animate-bounce-subtle" />
+            <div className={`w-12 h-12 bg-[#736153] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#736153]/30 transition-transform ${isCartAnimating ? 'scale-110 rotate-12' : ''}`}>
+              <ShoppingBag size={20} strokeWidth={2.5} className="animate-bounce-subtle" />
             </div>
           </div>
         </div>
@@ -422,9 +422,9 @@ export const MenuPage: React.FC = () => {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className={`fixed ${cartItemsCount > 0 ? 'bottom-44' : 'bottom-28'} right-6 z-50 p-3 bg-white/80 backdrop-blur-md text-blue-600 rounded-full shadow-lg transition-all active:scale-90`}
+          className={`fixed bottom-[103px] right-6 z-50 p-3 bg-white text-[#736153] rounded-full shadow-[0_4px_20px_rgba(115,97,83,0.2)] transition-all active:scale-90 opacity-90 hover:opacity-100 flex items-center justify-center`}
         >
-          <ArrowUp size={24} strokeWidth={2.5} />
+          <ArrowUp size={24} strokeWidth={2.5} className="animate-bounce" style={{ animationDuration: '2s' }} />
         </button>
       )}
 
