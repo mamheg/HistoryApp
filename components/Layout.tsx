@@ -51,11 +51,14 @@ const BottomNavigation = () => {
   );
 };
 
+import { useAppStore } from '../store/useAppStore';
+
 export const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
+  const { isKeyboardOpen } = useAppStore();
   const isConfirmPage = location.pathname.startsWith('/confirm-scan');
   const isAdminPage = location.pathname === '/admin';
-  const shouldShowBottomNav = !isConfirmPage && !isAdminPage;
+  const shouldShowBottomNav = !isConfirmPage && !isAdminPage && !isKeyboardOpen;
 
   return (
     <div className="min-h-screen bg-[#F3F4F6]">

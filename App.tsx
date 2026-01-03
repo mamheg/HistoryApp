@@ -18,20 +18,20 @@ import { Layout } from './components/Layout';
 
 
 const AppContent: React.FC = () => {
-  const { setAuth, isAuth, isAdmin, loadMenu } = useAppStore();
+  const { setAuth, isAuth, isAdmin, loadMenu, setKeyboardOpen } = useAppStore();
   const location = useLocation();
-  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  // const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // Moved to store
 
   useEffect(() => {
     const handleFocus = (e: FocusEvent) => {
       const target = e.target as HTMLElement;
       if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
-        setIsKeyboardOpen(true);
+        setKeyboardOpen(true);
       }
     };
 
     const handleBlur = () => {
-      setIsKeyboardOpen(false);
+      setKeyboardOpen(false);
     };
 
     window.addEventListener('focusin', handleFocus);

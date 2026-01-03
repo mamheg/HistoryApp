@@ -212,6 +212,8 @@ export const MenuPage: React.FC = () => {
     </div>
   );
 
+  const isKeyboardOpen = useAppStore(state => state.isKeyboardOpen);
+
   if (!user) return null;
 
   return (
@@ -241,7 +243,7 @@ export const MenuPage: React.FC = () => {
       <div className="sticky top-0 z-40 bg-[#F3F4F6]/95 backdrop-blur-md pt-4 pb-1 border-b border-gray-200/50 shadow-sm transition-all duration-300 md:top-0 md:pt-4">
         <div className="px-4 mb-4 flex gap-2">
           <div className="relative flex-1">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 transition-opacity duration-200">
               <Search className="h-5 w-5 text-gray-500" />
             </div>
             <input
@@ -252,7 +254,7 @@ export const MenuPage: React.FC = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
             {searchTerm && (
-              <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500">
+              <button onClick={() => setSearchTerm('')} className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 z-10">
                 <X className="h-5 w-5" />
               </button>
             )}
@@ -395,7 +397,7 @@ export const MenuPage: React.FC = () => {
         </div>
       </div>
 
-      {cartItemsCount > 0 && (
+      {!isKeyboardOpen && cartItemsCount > 0 && (
         <div className={`fixed bottom-24 left-1/2 -translate-x-1/2 z-50 transition-all duration-300 ${isCartAnimating ? 'scale-105' : 'scale-100'}`}>
           <div
             onClick={() => navigate('/cart')}
@@ -414,7 +416,7 @@ export const MenuPage: React.FC = () => {
         </div>
       )}
 
-      {showScrollTop && (
+      {!isKeyboardOpen && showScrollTop && (
         <button
           onClick={scrollToTop}
           className={`fixed bottom-[103px] right-6 z-50 p-3 bg-white text-[#736153] rounded-full shadow-[0_4px_20px_rgba(115,97,83,0.2)] transition-all active:scale-90 opacity-90 hover:opacity-100 flex items-center justify-center`}

@@ -63,6 +63,9 @@ interface AppState {
   loadMenu: () => Promise<void>;
   setProducts: (products: Product[]) => void;
   setCategories: (categories: Category[]) => void;
+
+  isKeyboardOpen: boolean;
+  setKeyboardOpen: (isOpen: boolean) => void;
 }
 
 export const ADMIN_TELEGRAM_IDS = [1962824399, 937710441];
@@ -384,4 +387,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   setProducts: (products) => set({ products }),
   setCategories: (categories) => set({ categories }),
+
+  isKeyboardOpen: false,
+  setKeyboardOpen: (isOpen) => set({ isKeyboardOpen: isOpen }),
 }));
