@@ -107,7 +107,7 @@ export const LoyaltyCard: React.FC<LoyaltyCardProps> = ({ user }) => {
                         <CheckCircle size={28} className="text-white" />
                       </div>
                       <p className="text-green-600 font-black uppercase text-[10px] tracking-[0.2em] text-center">Принято</p>
-                      <p className="text-slate-900 font-bold text-xs mt-1">+12 баллов</p>
+                      <p className="text-slate-900 font-bold text-xs mt-1">+12 бонусов</p>
                     </div>
                   </div>
                 )}
@@ -119,13 +119,13 @@ export const LoyaltyCard: React.FC<LoyaltyCardProps> = ({ user }) => {
                 <p className="text-[9px] text-[#736153] uppercase tracking-[0.2em] font-black mb-1">Ваш баланс</p>
                 <div className="flex items-center justify-center text-slate-900 leading-none">
                   <span className="text-3xl font-black tracking-tight">{user.points}</span>
-                  <span className="text-xs font-bold text-slate-500 ml-1.5 self-end mb-0.5">баллов</span>
+                  <span className="text-xs font-bold text-slate-500 ml-1.5 self-end mb-0.5">бонусов</span>
                 </div>
               </div>
             </div>
 
             <p className="mt-4 text-[8px] text-slate-600 font-black tracking-[0.1em] text-center uppercase leading-tight px-2">
-              Для получения баллов покажите код<br />бариста при оплате заказа
+              Для получения бонусов покажите код<br />бариста при оплате заказа
             </p>
           </div>
         </div>,

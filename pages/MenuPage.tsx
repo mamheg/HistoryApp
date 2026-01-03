@@ -161,13 +161,8 @@ export const MenuPage: React.FC = () => {
   const handleCategoryClick = (categoryId: string) => {
     const element = categoryRefs.current[categoryId];
     if (element) {
-      let offsetPosition = 0;
-      if (visibleCategories.length > 0 && visibleCategories[0].id === categoryId) {
-        offsetPosition = 0;
-      } else {
-        const elementPosition = element.getBoundingClientRect().top;
-        offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
-      }
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - HEADER_OFFSET;
       isManualScroll.current = true;
       if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
       window.scrollTo({ top: offsetPosition, behavior: 'smooth' });

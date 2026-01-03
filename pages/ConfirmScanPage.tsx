@@ -14,14 +14,14 @@ export const ConfirmScanPage: React.FC = () => {
   // В реальном приложении здесь был бы запрос к API для начисления баллов пользователю по userId
   const handleConfirm = () => {
     setLoading(true);
-    
+
     setTimeout(() => {
       // Имитация: если сканируем свой же код — начисляем себе (для теста пользователем)
       // В реальности здесь всегда идет вызов API для userId из параметров
       if (user && `id${user.id}` === userId) {
         addPoints(12);
       }
-      
+
       setIsSuccess(true);
       setLoading(false);
 
@@ -38,12 +38,12 @@ export const ConfirmScanPage: React.FC = () => {
         <div className="w-24 h-24 bg-green-500 rounded-full flex items-center justify-center shadow-xl shadow-green-100 mb-6 animate-pop-in">
           <CheckCircle size={48} className="text-white" />
         </div>
-        <h1 className="text-2xl font-black text-slate-900 mb-2 text-center leading-tight">Баллы начислены!</h1>
+        <h1 className="text-2xl font-black text-slate-900 mb-2 text-center leading-tight">Бонусы начислены!</h1>
         <p className="text-slate-600 text-center font-bold text-sm mb-10 max-w-[240px]">
-          Владелец QR-кода (<span className="text-blue-600">{userId}</span>) успешно получил 12 баллов за визит.
+          Владелец QR-кода (<span className="text-blue-600">{userId}</span>) успешно получил 12 бонусов за визит.
         </p>
-        
-        <button 
+
+        <button
           onClick={() => window.close()} // Попытка закрыть вкладку/окно Mini App
           className="w-full max-w-[200px] bg-slate-900 text-white py-4 rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] active:scale-95 transition-all"
         >
@@ -69,9 +69,9 @@ export const ConfirmScanPage: React.FC = () => {
         </div>
 
         <div className="text-center mb-10 animate-slide-up">
-          <h2 className="text-2xl font-black text-slate-900 mb-3">Начислить баллы?</h2>
+          <h2 className="text-2xl font-black text-slate-900 mb-3">Начислить бонусы?</h2>
           <p className="text-slate-600 text-sm leading-relaxed font-bold">
-            Вы отсканировали код пользователя <span className="text-blue-600 font-black">{userId}</span>. 
+            Вы отсканировали код пользователя <span className="text-blue-600 font-black">{userId}</span>.
             Подтвердите покупку, чтобы отправить ему бонусы.
           </p>
         </div>
@@ -88,7 +88,7 @@ export const ConfirmScanPage: React.FC = () => {
           </div>
         </div>
 
-        <button 
+        <button
           onClick={handleConfirm}
           disabled={loading}
           className="w-full bg-slate-900 text-white py-5 rounded-2xl font-black uppercase text-xs tracking-[0.2em] shadow-xl shadow-slate-200 active:scale-95 transition-all flex items-center justify-center gap-3 disabled:bg-slate-300 animate-slide-up stagger-2"
@@ -99,9 +99,9 @@ export const ConfirmScanPage: React.FC = () => {
             'Подтвердить начисление'
           )}
         </button>
-        
+
         <p className="mt-6 text-[9px] text-slate-500 font-black tracking-[0.1em] text-center uppercase leading-tight opacity-60">
-          Данная операция необратима и будет зафиксирована<br/>в системе лояльности
+          Данная операция необратима и будет зафиксирована<br />в системе лояльности
         </p>
       </div>
     </div>

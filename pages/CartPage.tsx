@@ -158,17 +158,17 @@ export const CartPage: React.FC = () => {
           <div className="flex justify-between items-center mb-4">
             <div className="flex flex-col">
               <div className="flex items-center gap-2">
-                <Coins size={14} className="text-blue-500" />
-                <p className="font-bold text-slate-900 text-sm">Списать баллы</p>
+                <Coins size={14} className="text-[#736153]" />
+                <p className="font-bold text-slate-900 text-sm">Списать бонусы</p>
               </div>
-              <p className="text-[10px] text-slate-400 font-medium mt-0.5">Доступно: {user.points} баллов</p>
+              <p className="text-[10px] text-slate-400 font-medium mt-0.5">Доступно: {user.points} бонусов</p>
             </div>
-            <div className="bg-blue-600 px-3 py-1 rounded-full shadow-lg shadow-blue-100">
-              <span className="text-sm font-black text-white">{bonusesToUse} баллов</span>
+            <div className="bg-[#736153] px-3 py-1 rounded-full shadow-lg shadow-[#736153]/20">
+              <span className="text-sm font-black text-white">{bonusesToUse} бонусов</span>
             </div>
           </div>
 
-          <div className="px-1">
+          <div className="px-1 relative">
             <input
               type="range"
               min="0"
@@ -176,15 +176,16 @@ export const CartPage: React.FC = () => {
               step="1"
               value={bonusesToUse}
               onChange={(e) => setBonusesToUse(parseInt(e.target.value))}
-              className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+              className="w-full h-2 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-[#736153] [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:bg-[#736153] [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer"
             />
           </div>
         </div>
       )}
 
       {/* Time Selection Block */}
-      <div className="bg-white rounded-[2rem] p-6 shadow-sm border border-gray-100 mb-6 animate-slide-up stagger-3 opacity-0 fill-mode-forwards">
-        <div className="flex p-1.5 bg-gray-100 rounded-2xl mb-8 relative">
+      {/* Time Selection Block */}
+      <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-gray-100 mb-6 animate-slide-up stagger-3 opacity-0 fill-mode-forwards">
+        <div className="flex p-1.5 bg-gray-100 rounded-2xl mb-4 relative">
           <div
             className="absolute top-1.5 bottom-1.5 bg-white rounded-xl shadow-sm transition-all duration-300 ease-out"
             style={{
@@ -194,24 +195,26 @@ export const CartPage: React.FC = () => {
           />
           <button
             onClick={() => setIsAsap(true)}
-            className={`flex-1 py-3 text-xs font-bold rounded-xl relative z-10 transition-colors ${isAsap ? 'text-blue-600' : 'text-slate-500'}`}
+            className={`flex-1 py-3 text-xs font-bold rounded-xl relative z-10 transition-colors ${isAsap ? 'text-[#736153]' : 'text-slate-500'}`}
           >
             Как можно скорее
           </button>
           <button
             onClick={() => setIsAsap(false)}
-            className={`flex-1 py-3 text-xs font-bold rounded-xl relative z-10 transition-colors ${!isAsap ? 'text-blue-600' : 'text-slate-500'}`}
+            className={`flex-1 py-3 text-xs font-bold rounded-xl relative z-10 transition-colors ${!isAsap ? 'text-[#736153]' : 'text-slate-500'}`}
           >
             Ко времени
           </button>
         </div>
 
-        <div className="flex flex-col items-center justify-center min-h-[80px] relative">
+        <div className="flex flex-col items-center justify-center min-h-[60px] relative">
           {isAsap ? (
             <div className="flex flex-col items-center animate-fade-in">
-              <Clock size={48} className="text-blue-200 mb-2" />
-              <p className="text-lg font-black text-slate-900">15 - 20 минут</p>
-              <p className="text-xs text-slate-400 font-medium">Примерное время ожидания</p>
+              <div className="flex items-center gap-3">
+                <Clock size={28} className="text-[#d6cec3]" />
+                <p className="text-lg font-black text-slate-900">15 - 20 минут</p>
+              </div>
+              <p className="text-xs text-slate-400 font-medium mt-1">Примерное время ожидания</p>
             </div>
           ) : (
             <div className="relative w-full flex justify-center items-center animate-pop-in">
@@ -221,9 +224,9 @@ export const CartPage: React.FC = () => {
                 onChange={(e) => setScheduledTime(e.target.value)}
                 className="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
               />
-              <div className="flex items-center justify-center gap-1 bg-blue-50/50 rounded-3xl px-8 py-2 border-2 border-transparent hover:border-blue-200 transition-colors">
+              <div className="flex items-center justify-center gap-1 bg-[#f5f3f0] rounded-3xl px-8 py-2 border-2 border-transparent hover:border-[#dbcbbd] transition-colors">
                 <span className="text-6xl font-black text-slate-900 tracking-tight leading-none">{scheduledTime.split(':')[0] || '--'}</span>
-                <span className="text-4xl font-bold text-blue-300 mb-2 animate-pulse">:</span>
+                <span className="text-4xl font-bold text-[#b5a698] mb-2 animate-pulse">:</span>
                 <span className="text-6xl font-black text-slate-900 tracking-tight leading-none">{scheduledTime.split(':')[1] || '--'}</span>
               </div>
               <p className="absolute -bottom-8 text-[10px] text-slate-400 font-bold uppercase tracking-wider pointer-events-none">
@@ -234,8 +237,8 @@ export const CartPage: React.FC = () => {
         </div>
 
         {/* Address Display (Static) */}
-        <div className="w-full flex items-center gap-3 mt-10 p-3 bg-gray-50 rounded-xl border border-transparent">
-          <MapPin size={20} className="text-blue-600" />
+        <div className="w-full flex items-center gap-3 mt-6 p-3 bg-gray-50 rounded-xl border border-transparent">
+          <MapPin size={20} className="text-[#736153]" />
           <div className="text-left">
             <p className="text-xs text-slate-400 font-bold">Адрес выдачи</p>
             <p className="text-sm font-bold text-slate-900">{selectedAddress}</p>
@@ -266,12 +269,12 @@ export const CartPage: React.FC = () => {
             <span className="text-slate-500 font-medium">Сумма заказа</span>
             <span className="font-bold text-slate-900">{subtotal}₽</span>
           </div>
-          {bonusesToUse > 0 && (
-            <div className="flex justify-between text-sm text-green-600 animate-pop-in">
-              <span className="font-medium">Скидка баллами</span>
-              <span className="font-bold">-{bonusesToUse}₽</span>
-            </div>
-          )}
+          <div className="flex justify-between text-sm animate-pop-in">
+            <span className="text-slate-500 font-medium">Бонусы</span>
+            <span className={`font-bold ${bonusesToUse > 0 ? 'text-[#736153]' : 'text-green-500'}`}>
+              {bonusesToUse > 0 ? `-${bonusesToUse}` : `+${Math.floor(subtotal * 0.05)}`}
+            </span>
+          </div>
         </div>
 
         <div className="flex justify-between mb-8">
@@ -284,10 +287,10 @@ export const CartPage: React.FC = () => {
         <button
           ref={payButtonRef}
           onClick={handlePay}
-          className="w-full bg-blue-600 text-white py-5 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-lg shadow-blue-200 active:scale-95 transition-all flex items-center justify-center gap-3 duration-200"
+          className="w-full bg-[#736153] text-white py-5 rounded-[1.5rem] font-black uppercase text-xs tracking-[0.2em] shadow-lg shadow-[#736153]/40 active:scale-95 transition-all flex items-center justify-center gap-3 duration-200"
         >
           <CreditCard size={18} />
-          Оплатить {Math.round(total)} ₽
+          ЗАКАЗАТЬ {Math.round(total)} ₽
         </button>
       </div>
 
