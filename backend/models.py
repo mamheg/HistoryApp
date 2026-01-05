@@ -74,3 +74,10 @@ class ProductModifier(Base):
     price = Column(Integer, default=0)
     
     product = relationship("Product", back_populates="modifiers")
+
+class Favorite(Base):
+    __tablename__ = "favorites"
+
+    user_id = Column(BigInteger, ForeignKey("users.id"), primary_key=True)
+    product_id = Column(Integer, ForeignKey("products.id"), primary_key=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)

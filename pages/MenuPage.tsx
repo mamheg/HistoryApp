@@ -8,7 +8,7 @@ import {
   ChevronRight,
   ShoppingBag,
   Heart,
-  Sparkles,
+  Heart,
   Plus,
   Instagram
 } from 'lucide-react';
@@ -31,7 +31,6 @@ export const MenuPage: React.FC = () => {
   const cart = useAppStore(state => state.cart);
   const favorites = useAppStore(state => state.favorites);
   const toggleFavorite = useAppStore(state => state.toggleFavorite);
-  const orderStats = useAppStore(state => state.orderStats);
 
   const cartTotal = cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
   const cartItemsCount = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -62,12 +61,7 @@ export const MenuPage: React.FC = () => {
     prevItemsCount.current = cartItemsCount;
   }, [cartItemsCount]);
 
-  const topProduct = useMemo(() => {
-    const sorted = products
-      .filter(p => (orderStats[p.id] || 0) > 0)
-      .sort((a, b) => (orderStats[b.id] || 0) - (orderStats[a.id] || 0));
-    return sorted.length > 0 ? sorted[0] : null;
-  }, [products, orderStats]);
+
 
   const filteredProducts = useMemo(() => {
     return products.filter(p => {
@@ -275,44 +269,7 @@ export const MenuPage: React.FC = () => {
       </div>
 
       <div className="px-4 space-y-8 mt-6">
-        {!searchTerm && !showFavoritesOnly && topProduct && (
-          <div className="animate-fade-in">
-            <h2 className="text-xl font-black text-gray-900 mb-4 px-1 flex items-center gap-2">
-              <span>Ваш фаворит</span>
-              <Sparkles size={18} className="text-blue-500 animate-pulse" />
-            </h2>
-            <div
-              onClick={() => handleProductClick(topProduct)}
-              className="bg-white p-5 rounded-[2.5rem] shadow-xl border border-blue-50 flex items-center gap-6 active:scale-[0.98] transition-all cursor-pointer relative overflow-hidden group"
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500" />
-              <div className="w-32 h-32 bg-gray-50 rounded-3xl p-3 shrink-0 relative z-10">
-                <img src={topProduct.imageUrl} alt={topProduct.name} className="w-full h-full object-contain drop-shadow-lg" />
-              </div>
-              <div className="flex-1 relative z-10">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-black uppercase text-blue-500 tracking-widest">Часто заказываете</span>
-                </div>
-                <h3 className="text-lg font-black text-gray-900 leading-tight mb-2">{topProduct.name}</h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-xl font-black text-slate-900">{topProduct.price} ₽</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={(e) => handleToggleFavorite(e, topProduct.id)}
-                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${favorites.includes(topProduct.id) ? 'bg-red-50 text-red-500 shadow-sm' : 'bg-gray-50 text-gray-500'
-                        }`}
-                    >
-                      <Heart size={20} fill={favorites.includes(topProduct.id) ? "currentColor" : "none"} />
-                    </button>
-                    <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200">
-                      <Plus size={20} strokeWidth={3} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {showFavoritesOnly ? (
           <div className="animate-fade-in min-h-[300px]">

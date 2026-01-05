@@ -100,3 +100,16 @@ class Category(CategoryBase):
 
 class MenuResponse(BaseModel):
     categories: list[Category]
+
+class FavoriteBase(BaseModel):
+    product_id: int
+
+class FavoriteCreate(FavoriteBase):
+    pass
+
+class Favorite(FavoriteBase):
+    user_id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True

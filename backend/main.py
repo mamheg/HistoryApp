@@ -167,7 +167,34 @@ def admin_delete_modifier(
         raise HTTPException(status_code=404, detail="Modifier not found")
     return {"ok": True}
 
+
+# --- Favorites ---
+@app.get("/api/users/{user_id}/favorites", response_model=list[int])
+def get_user_favorites(user_id: int, db: Session = Depends(get_db)):
+    return crud.get_user_favorites(db, user_id)
+
+@app.post("/api/users/{user_id}/favorites/{product_id}", response_model=schemas.Favorite)
+def add_favorite(user_id: int, product_id: int, db: Session = Depends(get_db)):
+    # Verify user exists
+    if not crud.get_user(db, user_id):
+         # Auto-create user if missing (for seamless UX)
+         pass # Or raise error
+    
+    # Verify product exists
+    if not crud.get_product(db, product_id):
+        raise HTTPException(status_code=404, detail="Product not found")
+
+    return crud.add_favorite(db, user_id, product_id)
+
+@app.delete("/api/users/{user_id}/favorites/{product_id}")
+def remove_favorite(user_id: int, product_id: int, db: Session = Depends(get_db)):
+    if not crud.remove_favorite(db, user_id, product_id):
+         # It's okay if it didn't exist, but strict REST might 404. Let's return success.
+         pass
+    return {"ok": True}
+
 # Serve Static Files (CSS, JS, Images)
+
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, FileResponse
 import os

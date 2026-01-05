@@ -216,12 +216,7 @@ def delete_product(db: Session, product_id: int):
 
 # --- Modifiers ---
 def add_modifier(db: Session, product_id: int, modifier: schemas.ModifierCreate):
-    db_mod = models.ProductModifier(
-        product_id=product_id,
-        modifier_type=modifier.modifier_type,
-        name=modifier.name,
-        price=modifier.price
-    )
+    db_mod = models.ProductModifier(**modifier.model_dump(), product_id=product_id)
     db.add(db_mod)
     db.commit()
     db.refresh(db_mod)
@@ -231,6 +226,32 @@ def delete_modifier(db: Session, modifier_id: int):
     db_mod = db.query(models.ProductModifier).filter(models.ProductModifier.id == modifier_id).first()
     if db_mod:
         db.delete(db_mod)
+        db.commit()
+        return True
+    return False
+
+# --- Favorites ---
+def get_user_favorites(db: Session, user_id: int):
+    return [
+        fav.product_id 
+        for fav in db.query(models.Favorite).filter(models.Favorite.user_id == user_id).all()
+    ]
+
+def add_favorite(db: Session, user_id: int, product_id: int):
+    # Check if exists
+    existing = db.query(models.Favorite).filter(models.Favorite.user_id == user_id, models.Favorite.product_id == product_id).first()
+    if existing:
+        return existing
+    
+    db_fav = models.Favorite(user_id=user_id, product_id=product_id)
+    db.add(db_fav)
+    db.commit()
+    return db_fav
+
+def remove_favorite(db: Session, user_id: int, product_id: int):
+    db_fav = db.query(models.Favorite).filter(models.Favorite.user_id == user_id, models.Favorite.product_id == product_id).first()
+    if db_fav:
+        db.delete(db_fav)
         db.commit()
         return True
     return False

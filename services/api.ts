@@ -167,5 +167,32 @@ export const api = {
         if (!response.ok) {
             throw new Error(`Failed to delete category: ${response.status}`);
         }
+    },
+
+    // Favorites
+    async getFavorites(userId: number): Promise<number[]> {
+        const response = await fetch(`${API_URL}/users/${userId}/favorites`);
+        if (!response.ok) {
+            throw new Error(`Failed to get favorites: ${response.status}`);
+        }
+        return response.json();
+    },
+
+    async addFavorite(userId: number, productId: number): Promise<void> {
+        const response = await fetch(`${API_URL}/users/${userId}/favorites/${productId}`, {
+            method: 'POST',
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to add favorite: ${response.status}`);
+        }
+    },
+
+    async removeFavorite(userId: number, productId: number): Promise<void> {
+        const response = await fetch(`${API_URL}/users/${userId}/favorites/${productId}`, {
+            method: 'DELETE',
+        });
+        if (!response.ok) {
+            throw new Error(`Failed to remove favorite: ${response.status}`);
+        }
     }
 };

@@ -39,7 +39,6 @@ interface AppState {
   products: Product[];
   categories: Category[];
   favorites: number[];
-  orderStats: Record<number, number>;
   lastOperation: OperationLog | null;
   selectedAddress: string;
 
@@ -72,8 +71,6 @@ export const ADMIN_TELEGRAM_IDS = [1962824399, 937710441];
 
 const savedUser = localStorage.getItem('hoffee_user');
 const initialUser = savedUser ? JSON.parse(savedUser) : null;
-const savedFavorites = localStorage.getItem('hoffee_favorites');
-const savedStats = localStorage.getItem('hoffee_stats');
 const savedAddress = localStorage.getItem('hoffee_address');
 
 export const useAppStore = create<AppState>((set, get) => ({
@@ -88,8 +85,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   activeCategory: 'coffee',
   products: PRODUCTS, // Fallback, will be overwritten by loadMenu()
   categories: CATEGORIES, // Fallback, will be overwritten by loadMenu()
-  favorites: savedFavorites ? JSON.parse(savedFavorites) : [],
-  orderStats: savedStats ? JSON.parse(savedStats) : {},
+  favorites: [],
   lastOperation: null,
   selectedAddress: savedAddress || 'Нальчик, ул. Толстого, 43',
 
@@ -120,6 +116,11 @@ export const useAppStore = create<AppState>((set, get) => ({
       isAuth: true,
       isAdmin: ADMIN_TELEGRAM_IDS.includes(user.id)
     });
+
+    // Load favorites from API
+    api.getFavorites(user.id)
+      .then(favs => set({ favorites: favs }))
+      .catch(err => console.error("Failed to load favorites", err));
   },
 
   updateProfile: (name, avatarUrl) => set((state) => {
@@ -151,7 +152,7 @@ export const useAppStore = create<AppState>((set, get) => ({
 
   logout: () => {
     localStorage.removeItem('hoffee_user');
-    set({ user: null, isAuth: false, isAdmin: false, cart: [], favorites: [], orderStats: {} });
+    set({ user: null, isAuth: false, isAdmin: false, cart: [], favorites: [] });
   },
 
   addToCart: (item) => set((state) => {
@@ -185,11 +186,7 @@ export const useAppStore = create<AppState>((set, get) => ({
   completeOrder: (total, pointsUsed, pickupTime, comment) => set((state) => {
     if (!state.user) return state;
 
-    const newStats = { ...state.orderStats };
-    state.cart.forEach(item => {
-      newStats[item.productId] = (newStats[item.productId] || 0) + item.quantity;
-    });
-    localStorage.setItem('hoffee_stats', JSON.stringify(newStats));
+    if (!state.user) return state;
 
     // Optimistic Update (will be overwritten by API response)
     const earnedPoints = pointsUsed === 0 ? Math.floor(total * 0.05) : 0;
@@ -242,20 +239,36 @@ export const useAppStore = create<AppState>((set, get) => ({
     return {
       orderHistory: [newOrder, ...state.orderHistory],
       cart: [],
-      user: updatedUser,
-      orderStats: newStats
+      user: updatedUser
     };
   }),
 
   setActiveCategory: (id) => set({ activeCategory: id }),
 
-  toggleFavorite: (productId) => set((state) => {
-    const newFavorites = state.favorites.includes(productId)
+  toggleFavorite: (productId) => {
+    const state = get();
+    if (!state.user) return;
+
+    const isFav = state.favorites.includes(productId);
+    const newFavorites = isFav
       ? state.favorites.filter(id => id !== productId)
       : [...state.favorites, productId];
-    localStorage.setItem('hoffee_favorites', JSON.stringify(newFavorites));
-    return { favorites: newFavorites };
-  }),
+
+    // Optimistic update
+    set({ favorites: newFavorites });
+
+    // API call
+    if (isFav) {
+      api.removeFavorite(state.user.id, productId).catch(err => {
+        console.error("Failed to remove favorite", err);
+        // Rollback on error? For now just log.
+      });
+    } else {
+      api.addFavorite(state.user.id, productId).catch(err => {
+        console.error("Failed to add favorite", err);
+      });
+    }
+  },
 
   setSelectedAddress: (address) => {
     localStorage.setItem('hoffee_address', address);
